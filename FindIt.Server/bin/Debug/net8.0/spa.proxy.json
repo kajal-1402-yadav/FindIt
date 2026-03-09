@@ -1,0 +1,10 @@
+{
+"SpaProxyServer": {
+"ServerUrl": "https://localhost:65194",
+"RedirectUrl": "",
+"LaunchCommand": "npm start",
+"WorkingDirectory": "D:\\FindIt\\FindIt.Server\\..\\findit.client",
+"MaxTimeoutInSeconds": "120",
+"KeepRunning": "false"
+}
+}

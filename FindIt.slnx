@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="findit.client/findit.client.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="FindIt.Server/FindIt.Server.csproj" />
+</Solution>
