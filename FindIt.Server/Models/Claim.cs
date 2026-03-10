@@ -16,3 +16,5 @@ public class Claim
 
     public string Status { get; set; } = "Pending";
 }
+
+
