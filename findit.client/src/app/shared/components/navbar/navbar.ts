@@ -1,11 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.html',
   styleUrls: ['./navbar.css'],
-  standalone:false
+  standalone: false
 })
 export class Navbar implements OnInit {
 
@@ -14,7 +14,16 @@ export class Navbar implements OnInit {
   constructor(private router: Router) { }
 
   ngOnInit(): void {
+
     this.checkLogin();
+
+    // 👇 update navbar on route change
+    this.router.events.subscribe(event => {
+      if (event instanceof NavigationEnd) {
+        this.checkLogin();
+      }
+    });
+
   }
 
   checkLogin() {

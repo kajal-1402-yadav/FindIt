@@ -1,1 +1,95 @@
-<p>create-item works!</p>
+
+<div class="page-header">
+
+  <h1>Report Lost / Found Item</h1>
+
+  <p>
+    Lost something or found something? Fill in the details below
+    to help reunite items with their rightful owners.
+  </p>
+
+</div>
+  <div class="create-container">
+
+    <div class="form-section">
+
+      <form (ngSubmit)="createItem()">
+
+        <div class="form-group">
+          <label>Title</label>
+          <input type="text" [(ngModel)]="title" name="title" required>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea [(ngModel)]="description" name="description"></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" [(ngModel)]="location" name="location">
+        </div>
+
+        <div class="form-group">
+          <label>Type</label>
+
+          <div class="type-toggle">
+
+            <button type="button"
+                    [class.active]="type==='Lost'"
+                    (click)="type='Lost'">
+
+              🔴 Lost Item
+
+            </button>
+
+            <button type="button"
+                    [class.active]="type==='Found'"
+                    (click)="type='Found'">
+
+              🟢 Found Item
+
+            </button>
+
+          </div>
+
+        </div>
+
+        <div class="form-group">
+
+          <label>Upload Image</label>
+
+          <input type="file"
+                 accept="image/*"
+                 (change)="onFileSelected($event)">
+
+        </div>
+
+
+        <div *ngIf="imagePreview" class="image-preview">
+
+          <img [src]="imagePreview" alt="Preview">
+
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Submit
+        </button>
+
+      </form>
+    </div>
+
+    <div class="tips-section">
+
+      <h3>Tips for Reporting</h3>
+
+      <ul>
+        <li>Provide a clear description</li>
+        <li>Mention the exact location</li>
+        <li>Include date or time if possible</li>
+        <li>Add unique identifiers</li>
+      </ul>
+
+    </div>
+
+  </div>

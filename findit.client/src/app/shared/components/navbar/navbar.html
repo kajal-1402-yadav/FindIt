@@ -6,16 +6,17 @@
 
   <div class="nav-links">
 
-    <a routerLink="/">Home</a>
 
 
     <!-- NOT LOGGED IN -->
 
     <ng-container *ngIf="!isLoggedIn">
+      <a routerLink="/" routerLinkActive="active">Home</a>
 
-      <a routerLink="/login">Login</a>
 
-      <a routerLink="/register">Register</a>
+      <a routerLink="/login" routerLinkActive="active">Login</a>
+
+      <a routerLink="/register" routerLinkActive="active">Register</a>
 
     </ng-container>
 
@@ -23,9 +24,11 @@
 
     <ng-container *ngIf="isLoggedIn">
 
+      <a routerLink="/dashboard">Dashboard</a>
+
       <a routerLink="/create-item">Report Item</a>
 
-      <a routerLink="/profile">Profile</a>
+      <!-- <a routerLink="/my-claims">My Claims</a> -->
 
       <button (click)="logout()">Logout</button>
 

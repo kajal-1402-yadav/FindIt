@@ -4,14 +4,19 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-login',
-  standalone: false,
   templateUrl: './login.html',
-  styleUrls: ['./login.css']
+  styleUrls: ['./login.css'],
+  standalone: false
 })
 export class Login {
 
   email = '';
   password = '';
+  showPassword = false;
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
 
   constructor(
     private authService: AuthService,
@@ -29,11 +34,15 @@ export class Login {
 
       next: (res: any) => {
 
-        localStorage.setItem('userId', res.userId);
-        localStorage.setItem('name', res.name);
-        localStorage.setItem('email', res.email);
+        const user = {
+          userId: res.userId,
+          name: res.name,
+          email: res.email
+        };
 
-        this.router.navigate(['/']);
+        localStorage.setItem('user', JSON.stringify(user));
+
+        this.router.navigate(['/dashboard']);
 
       },
 

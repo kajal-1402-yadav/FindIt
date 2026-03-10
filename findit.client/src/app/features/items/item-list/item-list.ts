@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { ItemService } from '../../../core/services/item.service';
 
 @Component({
@@ -10,20 +10,44 @@ import { ItemService } from '../../../core/services/item.service';
 export class ItemList implements OnInit {
 
   items: any[] = [];
+  loading: boolean = true;
+  errorMessage: string = '';
 
-  constructor(private itemService: ItemService) { }
+  constructor(
+    private itemService: ItemService,
+    private cdr: ChangeDetectorRef
+  ) { }
 
   ngOnInit(): void {
     this.loadItems();
   }
 
   loadItems() {
+    this.loading = true;
+    this.errorMessage = '';
+    console.log('Loading items...');
+    
     this.itemService.getItems().subscribe({
       next: (data: any) => {
-        this.items = data;
+        console.log('Items loaded:', data);
+        console.log('Data type:', typeof data);
+        console.log('Data length:', data?.length);
+        
+        // Ensure data is an array
+        this.items = Array.isArray(data) ? data : [];
+        this.loading = false;
+        
+        // Force change detection
+        this.cdr.detectChanges();
+        
+        console.log('Final items:', this.items);
+        console.log('Loading state:', this.loading);
       },
       error: (err: any) => {
-        console.error(err);
+        console.error('Error loading items:', err);
+        this.errorMessage = 'Failed to load items. Please try again.';
+        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -7,27 +8,29 @@ import { HttpClient } from '@angular/common/http';
 export class ItemService {
 
   private apiUrl = '/api/items';
-
   constructor(private http: HttpClient) { }
 
-  getItems() {
-    return this.http.get(`${this.apiUrl}`);
+  getItems(): Observable<any> {
+    return this.http.get(this.apiUrl);
   }
 
-  getItemById(id: number) {
+  getItem(id: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/${id}`);
   }
 
-  createItem(data: any) {
-    return this.http.post(`${this.apiUrl}`, data);
+  createItem(item: any): Observable<any> {
+    return this.http.post(this.apiUrl, item);
   }
 
-  updateItem(id: number, data: any) {
-    return this.http.put(`${this.apiUrl}/${id}`, data);
+  updateItem(id: number, item: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${id}`, item);
   }
 
-  deleteItem(id: number) {
+  deleteItem(id: number): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
+  getUserItems(userId: number): Observable<any> {
+    return this.http.get(`${this.apiUrl}/user/${userId}`);
+  }
 }

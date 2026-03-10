@@ -7,4 +7,16 @@
     <!-- Folder where production build objects will be placed -->
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist\findit.client\browser\</BuildOutputFolder>
   </PropertyGroup>
+  <ItemGroup>
+    <Folder Include="src\app\core\models\" />
+    <Folder Include="src\app\core\services\" />
+    <Folder Include="src\app\features\auth\login\" />
+    <Folder Include="src\app\features\auth\register\" />
+    <Folder Include="src\app\features\claims\claim-item\" />
+    <Folder Include="src\app\features\items\item-list\" />
+    <Folder Include="src\app\features\items\item-details\" />
+    <Folder Include="src\app\features\items\create-item\" />
+    <Folder Include="src\app\features\home\" />
+    <Folder Include="src\app\shared\components\navbar\" />
+  </ItemGroup>
 </Project>

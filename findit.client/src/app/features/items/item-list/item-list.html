@@ -1,24 +1,72 @@
-<div class="items-container">
+<div class="items-page">
 
-  <h2>Lost & Found Items</h2>
+  <h2 class="page-title">Lost & Found Items</h2>
 
-  <div class="items-grid">
+  <div *ngIf="loading" class="loading">
+    Loading items...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && items.length === 0" class="no-items">
+    No items found. Be the first to report an item!
+  </div>
+
+  <div class="items-grid" *ngIf="!loading && items.length > 0">
 
     <div class="item-card" *ngFor="let item of items">
 
+      <div class="item-header">
+
+        <span class="badge lost"
+              *ngIf="item.type === 'Lost'">
+          LOST
+        </span>
+
+        <span class="badge found"
+              *ngIf="item.type === 'Found'">
+          FOUND
+        </span>
+
+      </div>
+
       <h3>{{ item.title }}</h3>
 
-      <p>{{ item.description }}</p>
+      <p class="description">
+        {{ item.description }}
+      </p>
 
-      <p><strong>Location:</strong> {{ item.location }}</p>
+      <p class="location">
+        📍 {{ item.location }}
+      </p>
 
-      <p><strong>Status:</strong> {{ item.status }}</p>
+      <p class="status">
+        Status: {{ item.status }}
+      </p>
 
-      <p><strong>Type:</strong> {{ item.type }}</p>
+      <img *ngIf="item.imageUrl"
+           [src]="'http://localhost:5167' + item.imageUrl"
+           class="item-image" />
+      <div class="card-actions">
 
-      <button [routerLink]="['/item', item.id]">
-        View Details
-      </button>
+        <button class="details-btn"
+                [routerLink]="['/item', item.id]">
+          View Details
+        </button>
+
+        <!-- claim button only if item is FOUND -->
+
+        <button class="claim-btn"
+                *ngIf="item.type === 'Found'"
+                [routerLink]="['/claim', item.id]">
+
+          Claim Item
+
+        </button>
+
+      </div>
 
     </div>
 
