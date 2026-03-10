@@ -15,16 +15,21 @@ import { ItemDetails } from './features/items/item-details/item-details';
 import { ClaimItem } from './features/claims/claim-item/claim-item';
 
 import { FormsModule } from '@angular/forms';
+import { Landing } from './features/home/landing/landing';
+import { Navbar } from './shared/components/navbar/navbar';
 
 @NgModule({
   declarations: [
     App,
+    Landing,
     Login,
     Register,
     ItemList,
     CreateItem,
     ItemDetails,
-    ClaimItem
+    ClaimItem,
+    Navbar
+   
   ],
   imports: [
     BrowserModule,

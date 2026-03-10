@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-create-item',
   standalone: false,
   templateUrl: './create-item.html',
-  styleUrl: './create-item.css',
+  styleUrls:[ './create-item.css'],
 })
 export class CreateItem {
 

@@ -9,19 +9,23 @@ import { CreateItem } from './features/items/create-item/create-item';
 import { ItemDetails } from './features/items/item-details/item-details';
 
 import { ClaimItem } from './features/claims/claim-item/claim-item';
+import { Landing } from './features/home/landing/landing';
+
 const routes: Routes = [
 
-  { path: '', component: ItemList },
+  { path: '', component: Landing },
 
   { path: 'login', component: Login },
 
   { path: 'register', component: Register },
 
+  { path: 'dashboard', component: ItemList },
+
   { path: 'create-item', component: CreateItem },
 
   { path: 'item/:id', component: ItemDetails },
 
-  { path: 'claim/:itemId', component: ClaimItem}
+  { path: 'claim/:itemId', component: ClaimItem }
 
 ];
 

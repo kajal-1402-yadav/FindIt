@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
   selector: 'app-item-details',
   standalone: false,
   templateUrl: './item-details.html',
-  styleUrl: './item-details.css',
+  styleUrls: ['./item-details.css'],
 })
 export class ItemDetails {
 

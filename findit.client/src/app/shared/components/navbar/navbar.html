@@ -1,0 +1,36 @@
+<nav class="navbar">
+
+  <div class="logo" routerLink="/">
+    FindIt
+  </div>
+
+  <div class="nav-links">
+
+    <a routerLink="/">Home</a>
+
+
+    <!-- NOT LOGGED IN -->
+
+    <ng-container *ngIf="!isLoggedIn">
+
+      <a routerLink="/login">Login</a>
+
+      <a routerLink="/register">Register</a>
+
+    </ng-container>
+
+    <!-- LOGGED IN -->
+
+    <ng-container *ngIf="isLoggedIn">
+
+      <a routerLink="/create-item">Report Item</a>
+
+      <a routerLink="/profile">Profile</a>
+
+      <button (click)="logout()">Logout</button>
+
+    </ng-container>
+
+  </div>
+
+</nav>
