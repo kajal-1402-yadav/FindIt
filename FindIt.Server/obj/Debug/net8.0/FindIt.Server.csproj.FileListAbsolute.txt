@@ -136,3 +136,8 @@ D:\FindIt\FindIt.Server\obj\Debug\net8.0\FindIt.Server.genruntimeconfig.cache
 D:\FindIt\FindIt.Server\obj\Debug\net8.0\ref\FindIt.Server.dll
 D:\FindIt\FindIt.Server\obj\Debug\net8.0\FindIt.Server.sourcelink.json
 D:\FindIt\FindIt.Server\bin\Debug\net8.0\BCrypt.Net-Next.dll
+D:\FindIt\FindIt.Server\bin\Debug\net8.0\Microsoft.OpenApi.dll
+D:\FindIt\FindIt.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.Swagger.dll
+D:\FindIt\FindIt.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerGen.dll
+D:\FindIt\FindIt.Server\bin\Debug\net8.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+D:\FindIt\FindIt.Server\obj\Debug\net8.0\FindIt.Server.MvcApplicationPartsAssemblyInfo.cs
