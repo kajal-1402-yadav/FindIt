@@ -5,12 +5,31 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 
+import { Login } from './features/auth/login/login';
+import { Register } from './features/auth/register/register';
+
+import { ItemList } from './features/items/item-list/item-list';
+import { CreateItem } from './features/items/create-item/create-item';
+import { ItemDetails } from './features/items/item-details/item-details';
+
+import { ClaimItem } from './features/claims/claim-item/claim-item';
+
+import { FormsModule } from '@angular/forms';
+
 @NgModule({
   declarations: [
-    App
+    App,
+    Login,
+    Register,
+    ItemList,
+    CreateItem,
+    ItemDetails,
+    ClaimItem
   ],
   imports: [
-    BrowserModule, HttpClientModule,
+    BrowserModule,
+    HttpClientModule,
+    FormsModule,
     AppRoutingModule
   ],
   providers: [
