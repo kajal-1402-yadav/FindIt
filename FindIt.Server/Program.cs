@@ -12,9 +12,13 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowAngular",
         policy =>
         {
-            policy.WithOrigins("http://localhost:4200")
+            policy.WithOrigins("http://localhost:4200", 
+                             "http://localhost:65194",
+                             "https://localhost:4200",
+                             "http://localhost:5167")
                   .AllowAnyHeader()
-                  .AllowAnyMethod();
+                  .AllowAnyMethod()
+                  .AllowCredentials();
         });
 });
 
@@ -34,10 +38,18 @@ if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
     app.UseSwagger();
-    app.UseSwaggerUI();
+
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FindIt API V1");
+        c.RoutePrefix = "swagger";
+    });
+
 }
 
-app.UseHttpsRedirection();
+// app.UseHttpsRedirection();
+app.UseStaticFiles();
+
 
 app.UseCors("AllowAngular");
 

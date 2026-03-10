@@ -22,6 +22,11 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
+        if (dto.Password.Length < 6)
+        {
+            return BadRequest("Password must be at least 6 characters");
+        }
+
         var existingUser = await _context.Users
             .FirstOrDefaultAsync(u => u.Email == dto.Email);
 

@@ -1,7 +1,8 @@
+using FindIt.Server.Data;
+using FindIt.Server.DTOs;
+using FindIt.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using FindIt.Server.Data;
-using FindIt.Server.Models;
 
 namespace FindIt.Server.Controllers
 {
@@ -19,10 +20,40 @@ namespace FindIt.Server.Controllers
         // POST: api/items
         // Create lost or found item
         [HttpPost]
-        public async Task<ActionResult<Item>> CreateItem(Item item)
+        public async Task<IActionResult> CreateItem([FromForm] ItemCreateDto dto)
         {
-            item.Date = DateTime.UtcNow;
-            item.Status = "Open";
+            string? imagePath = null;
+
+            if (dto.Image != null)
+            {
+                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+
+                if (!Directory.Exists(uploadsFolder))
+                    Directory.CreateDirectory(uploadsFolder);
+
+                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.Image.FileName);
+
+                var filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await dto.Image.CopyToAsync(stream);
+                }
+
+                imagePath = "/images/" + fileName;
+            }
+
+            var item = new Item
+            {
+                Title = dto.Title,
+                Description = dto.Description,
+                Location = dto.Location,
+                Type = dto.Type,
+                UserId = dto.UserId,
+                Date = DateTime.UtcNow,
+                Status = "Open",
+                ImageUrl = imagePath
+            };
 
             _context.Items.Add(item);
             await _context.SaveChangesAsync();

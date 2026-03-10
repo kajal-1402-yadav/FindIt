@@ -18,6 +18,9 @@ public class Item
     public string Status { get; set; } = "Open";
     // Open, Claimed, Returned
 
+    public string? ImageUrl { get; set; }
+    // path of uploaded image
+
     public int UserId { get; set; }
 
     public User? User { get; set; }
