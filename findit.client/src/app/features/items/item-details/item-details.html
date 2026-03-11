@@ -1,1 +1,94 @@
-<p>item-details works!</p>
+<div class="details-page">
+
+  <div *ngIf="loading" class="loading">
+    Loading item details...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div class="item-card" *ngIf="!loading && item">
+
+    <div class="item-info">
+
+      <h2>{{ item.title }}</h2>
+
+      <p class="description">
+        {{ item.description }}
+      </p>
+
+      <p>📍 {{ item.location }}</p>
+
+      <p>
+        Type:
+        <span class="badge"
+              [ngClass]="item.type === 'Lost' ? 'lost' : 'found'">
+
+          {{ item.type }}
+
+        </span>
+      </p>
+
+      <p>
+        Status:
+        <span class="status"
+              [ngClass]="item.status === 'Open' ? 'open' : 'returned'">
+
+          {{ item.status }}
+
+        </span>
+      </p>
+
+    </div>
+
+  </div>
+
+  <!-- CLAIMS SECTION -->
+
+  <div *ngIf="currentUserId === item.userId" class="claims-section">
+
+    <h3>Claims for this Item</h3>
+
+    <div *ngIf="claims.length === 0">
+      No claims yet.
+    </div>
+
+    <div *ngFor="let claim of claims" class="claim-card">
+
+      <p><strong>User:</strong> {{ claim.user?.name }}</p>
+
+      <p><strong>Message:</strong></p>
+
+      <p class="claim-message">
+        {{ claim.message }}
+      </p>
+
+      <p>Status: {{ claim.status }}</p>
+
+      <div *ngIf="claim.status === 'Pending'" class="claim-actions">
+
+        <button class="approve-btn"
+                (click)="approveClaim(claim.id)">
+          Approve
+        </button>
+
+        <button class="reject-btn"
+                (click)="rejectClaim(claim.id)">
+          Reject
+        </button>
+
+      </div>
+
+      <div *ngIf="claim.status === 'Approved'" class="approved-msg">
+
+        Claim Approved
+        Contact the finder to arrange item pickup.
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

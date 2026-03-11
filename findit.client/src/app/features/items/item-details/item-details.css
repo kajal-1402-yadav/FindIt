@@ -1,0 +1,89 @@
+.details-page {
+  max-width: 900px;
+  margin: auto;
+}
+
+.item-card {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.image-section {
+  width: 300px;
+}
+
+.item-image {
+  width: 100%;
+  border-radius: 10px;
+}
+
+.item-info {
+  flex: 1;
+}
+
+.badge.lost {
+  background: #ef4444;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.badge.found {
+  background: #22c55e;
+  color: white;
+  padding: 4px 10px;
+  border-radius: 6px;
+}
+
+.status.open {
+  color: #22c55e;
+}
+
+.status.returned {
+  color: #3b82f6;
+}
+
+.claims-section {
+  margin-top: 40px;
+}
+
+.claim-card {
+  border: 1px solid #333;
+  padding: 15px;
+  margin-top: 15px;
+  border-radius: 8px;
+}
+
+.claim-message {
+  background: #111;
+  padding: 10px;
+  border-radius: 6px;
+}
+
+.claim-actions {
+  margin-top: 10px;
+}
+
+.approve-btn {
+  background: #22c55e;
+  border: none;
+  padding: 8px 14px;
+  margin-right: 10px;
+  border-radius: 6px;
+  color: white;
+}
+
+.reject-btn {
+  background: #ef4444;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  color: white;
+}
+
+.approved-msg {
+  margin-top: 10px;
+  color: #22c55e;
+  font-weight: bold;
+}

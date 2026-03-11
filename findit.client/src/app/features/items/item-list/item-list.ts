@@ -12,6 +12,7 @@ export class ItemList implements OnInit {
   items: any[] = [];
   loading: boolean = true;
   errorMessage: string = '';
+  currentUserId: number | null = null;
 
   constructor(
     private itemService: ItemService,
@@ -19,7 +20,12 @@ export class ItemList implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    this.currentUserId = user.userId || null;
+
     this.loadItems();
+
   }
 
   loadItems() {

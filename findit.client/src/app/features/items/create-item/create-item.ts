@@ -14,45 +14,6 @@ export class CreateItem {
   description = '';
   location = '';
   type = 'Lost';
-  selectedFile: File | null = null;
-  imagePreview: string | ArrayBuffer | null = null;
-
-  onFileSelected(event: any) {
-
-    const file = event.target.files[0];
-
-    if (file) {
-      // Check file size (max 5MB)
-      if (file.size > 5 * 1024 * 1024) {
-        alert('Image size must be less than 5MB');
-        event.target.value = '';
-        this.selectedFile = null;
-        this.imagePreview = null;
-        return;
-      }
-
-      // Check file type
-      if (!file.type.match('image.*')) {
-        alert('Please select an image file');
-        event.target.value = '';
-        this.selectedFile = null;
-        this.imagePreview = null;
-        return;
-      }
-
-      this.selectedFile = file;
-
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        this.imagePreview = reader.result;
-      };
-
-      reader.readAsDataURL(file);
-
-    }
-
-  }
 
   constructor(
     private itemService: ItemService,
@@ -69,32 +30,36 @@ export class CreateItem {
       return;
     }
 
-    const formData = new FormData();
-
-    formData.append('Title', this.title);
-    formData.append('Description', this.description);
-    formData.append('Location', this.location);
-    formData.append('Type', this.type);
-    formData.append('UserId', user.userId.toString());
-
-    if (this.selectedFile) {
-      formData.append('Image', this.selectedFile, this.selectedFile.name);
+    if (!this.title.trim() || !this.description.trim() || !this.location.trim()) {
+      alert("Please fill all required fields");
+      return;
     }
 
-    this.itemService.createItem(formData).subscribe({
+    // Send as JSON, not FormData (backend expects [FromBody])
+    const itemData = {
+      Title: this.title,
+      Description: this.description,
+      Location: this.location,
+      Type: this.type,
+      UserId: user.userId
+    };
 
+    console.log('Creating item:', itemData);
+    this.itemService.createItem(itemData).subscribe({
       next: () => {
         alert("Item reported successfully");
+        this.title = '';
+        this.description = '';
+        this.location = '';
+        this.type = 'Lost';
         this.router.navigate(['/dashboard']);
       },
-
       error: (err) => {
         console.error(err);
+        alert("Failed to create item");
       }
-
     });
 
   }
 
-  
 }

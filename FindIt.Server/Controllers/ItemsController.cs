@@ -17,61 +17,13 @@ namespace FindIt.Server.Controllers
             _context = context;
         }
 
-        // POST: api/items
-        // Create lost or found item
-        [HttpPost]
-        public async Task<IActionResult> CreateItem([FromForm] ItemCreateDto dto)
+        // GET: api/items/test
+        // Test endpoint
+        [HttpGet("test")]
+        public IActionResult Test()
         {
-            string? imagePath = null;
-
-            if (dto.Image != null)
-            {
-                var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
-
-                if (!Directory.Exists(uploadsFolder))
-                    Directory.CreateDirectory(uploadsFolder);
-
-                var fileName = Guid.NewGuid().ToString() + Path.GetExtension(dto.Image.FileName);
-
-                var filePath = Path.Combine(uploadsFolder, fileName);
-
-                using (var stream = new FileStream(filePath, FileMode.Create))
-                {
-                    await dto.Image.CopyToAsync(stream);
-                }
-
-                imagePath = "/images/" + fileName;
-            }
-
-            var item = new Item
-            {
-                Title = dto.Title,
-                Description = dto.Description,
-                Location = dto.Location,
-                Type = dto.Type,
-                UserId = dto.UserId,
-                Date = DateTime.UtcNow,
-                Status = "Open",
-                ImageUrl = imagePath
-            };
-
-            _context.Items.Add(item);
-            await _context.SaveChangesAsync();
-
-            return Ok(item);
-        }
-
-        // GET: api/items
-        // Get all items
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
-        {
-            var items = await _context.Items
-                .Include(i => i.User)
-                .OrderByDescending(i => i.Date)
-                .ToListAsync();
-
-            return Ok(items);
+            Console.WriteLine("=== Test endpoint called ===");
+            return Ok(new { message = "Backend is working!", timestamp = DateTime.UtcNow });
         }
 
         // GET: api/items/{id}
@@ -91,6 +43,19 @@ namespace FindIt.Server.Controllers
             return Ok(item);
         }
 
+        // GET: api/items
+        // Get all items
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<Item>>> GetItems()
+        {
+            var items = await _context.Items
+                .Include(i => i.User)
+                .OrderByDescending(i => i.Date)
+                .ToListAsync();
+
+            return Ok(items);
+        }
+
         // GET: api/items/user/{userId}
         // Get items created by a specific user
         [HttpGet("user/{userId}")]
@@ -104,45 +69,47 @@ namespace FindIt.Server.Controllers
             return Ok(items);
         }
 
-        // PUT: api/items/{id}
-        // Update item
-        [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateItem(int id, Item updatedItem)
+        // POST: api/items
+        // Create lost or found item
+        [HttpPost]
+        public async Task<IActionResult> CreateItem([FromBody] ItemCreateDto dto)
         {
-            var item = await _context.Items.FindAsync(id);
+            Console.WriteLine("=== CreateItem called ===");
+            Console.WriteLine($"Title: {dto.Title}");
+            Console.WriteLine($"Description: {dto.Description}");
+            Console.WriteLine($"Location: {dto.Location}");
+            Console.WriteLine($"Type: {dto.Type}");
+            Console.WriteLine($"UserId: {dto.UserId}");
 
-            if (item == null)
+            var item = new Item
             {
-                return NotFound();
-            }
+                Title = dto.Title,
+                Description = dto.Description,
+                Location = dto.Location,
+                Type = dto.Type,
+                UserId = dto.UserId,
+                Date = DateTime.UtcNow,
+                Status = "Open",
+                ImageUrl = null
+            };
 
-            item.Title = updatedItem.Title;
-            item.Description = updatedItem.Description;
-            item.Location = updatedItem.Location;
-            item.Type = updatedItem.Type;
-            item.Status = updatedItem.Status;
-
+            _context.Items.Add(item);
             await _context.SaveChangesAsync();
 
-            return Ok(item);
-        }
-
-        // DELETE: api/items/{id}
-        // Delete item
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteItem(int id)
-        {
-            var item = await _context.Items.FindAsync(id);
-
-            if (item == null)
+            var response = new ItemResponseDto
             {
-                return NotFound();
-            }
+                Id = item.Id,
+                Title = item.Title,
+                Description = item.Description,
+                Location = item.Location,
+                Date = item.Date,
+                Type = item.Type,
+                Status = item.Status,
+                ImageUrl = item.ImageUrl,
+                UserId = item.UserId
+            };
 
-            _context.Items.Remove(item);
-            await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Item deleted successfully" });
+            return Ok(response);
         }
     }
 }

@@ -1,0 +1,39 @@
+.claim-page {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.claim-card {
+  width: 700px;
+  padding: 30px;
+  border-radius: 12px;
+  background: rgba(0,0,0,0.6);
+  color: white;
+}
+
+.item-image {
+  width: 200px;
+  margin-top: 10px;
+  border-radius: 8px;
+}
+
+.claim-form {
+  margin-top: 20px;
+}
+
+textarea {
+  width: 100%;
+  height: 120px;
+  padding: 10px;
+  margin-top: 10px;
+}
+
+.submit-btn {
+  margin-top: 15px;
+  padding: 10px 20px;
+  background: #22c55e;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}

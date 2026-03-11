@@ -1,0 +1,44 @@
+<div class="items-page">
+
+  <h2 class="page-title">My Reported Items</h2>
+
+  <div *ngIf="loading" class="loading">
+    Loading your items...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div *ngIf="!loading && items.length === 0" class="no-items">
+    You haven't reported any items yet.
+  </div>
+
+  <div class="items-grid" *ngIf="!loading && items.length > 0">
+
+    <div class="item-card" *ngFor="let item of items">
+
+      <h3>{{ item.title }}</h3>
+
+      <p>{{ item.description }}</p>
+
+      <p>📍 {{ item.location }}</p>
+
+      <p>Status: {{ item.status }}</p>
+
+      <div class="card-actions">
+
+        <button [routerLink]="['/item', item.id]"
+                class="details-btn">
+
+          View Details
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

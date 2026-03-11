@@ -1,38 +1,11 @@
-<div class="items-page">
+<div class="items-grid" *ngIf="!loading && items.length > 0">
 
-  <h2 class="page-title">Lost & Found Items</h2>
+  <div class="item-card" *ngFor="let item of items">
 
-  <div *ngIf="loading" class="loading">
-    Loading items...
-  </div>
+    <!-- CARD CONTENT -->
+    <div class="card-body">
 
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
-
-  <div *ngIf="!loading && items.length === 0" class="no-items">
-    No items found. Be the first to report an item!
-  </div>
-
-  <div class="items-grid" *ngIf="!loading && items.length > 0">
-
-    <div class="item-card" *ngFor="let item of items">
-
-      <div class="item-header">
-
-        <span class="badge lost"
-              *ngIf="item.type === 'Lost'">
-          LOST
-        </span>
-
-        <span class="badge found"
-              *ngIf="item.type === 'Found'">
-          FOUND
-        </span>
-
-      </div>
-
-      <h3>{{ item.title }}</h3>
+      <h3 class="item-title">{{ item.title }}</h3>
 
       <p class="description">
         {{ item.description }}
@@ -42,13 +15,22 @@
         📍 {{ item.location }}
       </p>
 
-      <p class="status">
-        Status: {{ item.status }}
-      </p>
+      <div class="status-row">
 
-      <img *ngIf="item.imageUrl"
-           [src]="'http://localhost:5167' + item.imageUrl"
-           class="item-image" />
+        <span class="status"
+              [ngClass]="{
+                'open': item.status === 'Open',
+                'returned': item.status === 'Returned'
+              }">
+
+          {{ item.status }}
+
+        </span>
+
+      </div>
+
+      <!-- ACTION BUTTONS -->
+
       <div class="card-actions">
 
         <button class="details-btn"
@@ -56,10 +38,12 @@
           View Details
         </button>
 
-        <!-- claim button only if item is FOUND -->
-
         <button class="claim-btn"
-                *ngIf="item.type === 'Found'"
+                *ngIf="
+                  item.type === 'Found' &&
+                  item.status === 'Open' &&
+                  currentUserId !== item.userId
+                "
                 [routerLink]="['/claim', item.id]">
 
           Claim Item

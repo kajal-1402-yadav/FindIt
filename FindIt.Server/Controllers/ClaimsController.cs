@@ -21,6 +21,19 @@ namespace FindIt.Server.Controllers
         [HttpPost]
         public async Task<ActionResult<Claim>> CreateClaim(Claim claim)
         {
+            var item = await _context.Items.FindAsync(claim.ItemId);
+
+            if (item == null)
+                return NotFound("Item not found");
+
+            // 🚫 Prevent user from claiming their own item
+            if (item.UserId == claim.UserId)
+                return BadRequest("You cannot claim your own item.");
+
+            // 🚫 Prevent claims on returned items
+            if (item.Status == "Returned")
+                return BadRequest("Item has already been returned");
+
             claim.Status = "Pending";
             claim.CreatedAt = DateTime.UtcNow;
 
@@ -70,16 +83,18 @@ namespace FindIt.Server.Controllers
             if (claim == null)
                 return NotFound();
 
-            claim.Status = "Approved";
+            if (claim.Item.Status == "Returned")
+                return BadRequest("Item already returned");
 
-            if (claim.Item != null)
-            {
-                claim.Item.Status = "Returned";
-            }
+            claim.Status = "Approved";
+            claim.Item.Status = "Returned";
 
             await _context.SaveChangesAsync();
 
-            return Ok(claim);
+            return Ok(new
+            {
+                message = "Claim Approved. Contact the finder to arrange item pickup."
+            });
         }
 
         // PUT: api/claims/{id}/reject

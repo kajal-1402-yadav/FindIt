@@ -19,15 +19,8 @@ export class ItemService {
   }
 
   createItem(item: any): Observable<any> {
+    console.log('Creating item, type:', typeof item, 'is FormData:', item instanceof FormData);
     return this.http.post(this.apiUrl, item);
-  }
-
-  updateItem(id: number, item: any): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, item);
-  }
-
-  deleteItem(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}/${id}`);
   }
 
   getUserItems(userId: number): Observable<any> {

@@ -10,6 +10,7 @@ import { ItemDetails } from './features/items/item-details/item-details';
 
 import { ClaimItem } from './features/claims/claim-item/claim-item';
 import { Landing } from './features/home/landing/landing';
+import { MyItems } from './features/items/my-items/my-items';
 
 const routes: Routes = [
 
@@ -25,8 +26,12 @@ const routes: Routes = [
 
   { path: 'item/:id', component: ItemDetails },
 
-  { path: 'claim/:itemId', component: ClaimItem }
+  { path: 'claim/:itemId', component: ClaimItem },
 
+  {
+    path: 'my-items',
+    component: MyItems
+  }
 ];
 
 @NgModule({

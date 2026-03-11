@@ -1,1 +1,42 @@
-<p>claim-item works!</p>
+<div class="claim-page">
+
+  <div *ngIf="loading" class="loading">
+    Loading item details...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <div class="claim-card" *ngIf="!loading && item">
+
+    <h2>Claim Item</h2>
+
+    <div class="item-info">
+
+      <h3>{{ item.title }}</h3>
+
+      <p>{{ item.description }}</p>
+
+      <p>📍 {{ item.location }}</p>
+
+      <p><strong>Type:</strong> {{ item.type }}</p>
+
+    </div>
+
+    <div class="claim-form">
+
+      <label>Explain why this item belongs to you</label>
+
+      <textarea [(ngModel)]="message"
+                placeholder="Example: My student ID card is inside the wallet..."></textarea>
+
+      <button class="submit-btn" (click)="submitClaim()">
+        Submit Claim
+      </button>
+
+    </div>
+
+  </div>
+
+</div>

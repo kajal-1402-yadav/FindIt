@@ -17,6 +17,7 @@
     <Folder Include="src\app\features\items\item-details\" />
     <Folder Include="src\app\features\items\create-item\" />
     <Folder Include="src\app\features\home\" />
+    <Folder Include="src\app\features\items\my-items\" />
     <Folder Include="src\app\shared\components\navbar\" />
   </ItemGroup>
 </Project>

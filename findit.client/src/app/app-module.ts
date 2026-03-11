@@ -17,6 +17,7 @@ import { ClaimItem } from './features/claims/claim-item/claim-item';
 import { FormsModule } from '@angular/forms';
 import { Landing } from './features/home/landing/landing';
 import { Navbar } from './shared/components/navbar/navbar';
+import { MyItems } from './features/items/my-items/my-items';
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import { Navbar } from './shared/components/navbar/navbar';
     CreateItem,
     ItemDetails,
     ClaimItem,
-    Navbar
+    Navbar,
+    MyItems
    
   ],
   imports: [
