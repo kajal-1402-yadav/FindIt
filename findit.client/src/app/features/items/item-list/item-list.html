@@ -1,59 +1,187 @@
-<div class="items-grid" *ngIf="!loading && items.length > 0">
+<div class="items-page">
 
-  <div class="item-card" *ngFor="let item of items">
-
-    <!-- CARD CONTENT -->
-    <div class="card-body">
-
-      <h3 class="item-title">{{ item.title }}</h3>
-
-      <p class="description">
-        {{ item.description }}
-      </p>
-
-      <p class="location">
-        📍 {{ item.location }}
-      </p>
-
-      <div class="status-row">
-
-        <span class="status"
-              [ngClass]="{
-                'open': item.status === 'Open',
-                'returned': item.status === 'Returned'
-              }">
-
-          {{ item.status }}
-
-        </span>
-
-      </div>
-
-      <!-- ACTION BUTTONS -->
-
-      <div class="card-actions">
-
-        <button class="details-btn"
-                [routerLink]="['/item', item.id]">
-          View Details
-        </button>
-
-        <button class="claim-btn"
-                *ngIf="
-                  item.type === 'Found' &&
-                  item.status === 'Open' &&
-                  currentUserId !== item.userId
-                "
-                [routerLink]="['/claim', item.id]">
-
-          Claim Item
-
-        </button>
-
-      </div>
-
+  <!-- LOST ITEMS SECTION -->
+  <div class="section-container" *ngIf="!loading && lostItems.length > 0">
+    <div class="section-header">
+      <h2 class="section-title lost-title">
+        Lost Items ({{ lostItems.length }})
+      </h2>
     </div>
 
+    <div class="items-grid">
+      <div class="item-card" *ngFor="let item of lostItems">
+
+        <div class="item-header">
+          <span class="badge lost">Lost</span>
+        </div>
+
+        <div class="item-meta">
+          <p class="item-field" *ngIf="item.title && item.title.trim()">
+            <span class="field-label">Name:</span> 
+            <span class="field-value">{{ item.title }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.description && item.description.trim()">
+            <span class="field-label">Description:</span> 
+            <span class="field-value">{{ item.description }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.location && item.location.trim()">
+            <span class="field-label">Location:</span> 
+            <span class="field-value">{{ item.location }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.date">
+            <span class="field-label">Date (IST):</span> 
+            <span class="field-value">{{ item.date | date:'MMM d, y, h:mm:ss a':'Asia/Kolkata' }}</span>
+          </p>
+
+          <p class="item-field">
+            <span class="field-label">Status:</span> 
+            <span class="status open">Open</span>
+          </p>
+
+          <p class="item-field">
+            <span class="field-label">Reported by:</span> 
+            <span class="field-value">{{ item.user?.name || 'Anonymous' }}</span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- FOUND ITEMS SECTION -->
+  <div class="section-container" *ngIf="!loading && foundItems.length > 0">
+    <div class="section-header">
+      <h2 class="section-title found-title">
+        Found Items ({{ foundItems.length }})
+      </h2>
+    </div>
+
+    <div class="items-grid">
+      <div class="item-card" *ngFor="let item of foundItems">
+
+        <div class="item-header">
+          <span class="badge found">Found</span>
+        </div>
+
+        <div class="item-meta">
+          <p class="item-field" *ngIf="item.title && item.title.trim()">
+            <span class="field-label">Name:</span> 
+            <span class="field-value">{{ item.title }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.description && item.description.trim()">
+            <span class="field-label">Description:</span> 
+            <span class="field-value">{{ item.description }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.location && item.location.trim()">
+            <span class="field-label">Location:</span> 
+            <span class="field-value">{{ item.location }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.date">
+            <span class="field-label">Date (IST):</span> 
+            <span class="field-value">{{ item.date | date:'MMM d, y, h:mm:ss a':'Asia/Kolkata' }}</span>
+          </p>
+
+          <p class="item-field">
+            <span class="field-label">Status:</span> 
+            <span class="status open">Open</span>
+          </p>
+
+          <p class="item-field">
+            <span class="field-label">Reported by:</span> 
+            <span class="field-value">{{ item.user?.name || 'Anonymous' }}</span>
+          </p>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div class="card-actions">
+          <button class="claim-btn"
+                  *ngIf="
+                    item.type === 'Found' &&
+                    item.status === 'Open' &&
+                    currentUserId !== item.userId
+                  "
+                  [routerLink]="['/claim', item.id]">
+            Claim Item
+          </button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- RETURNED ITEMS SECTION -->
+  <div class="section-container" *ngIf="!loading && returnedItems.length > 0">
+    <div class="section-header">
+      <h2 class="section-title returned-title">
+        Returned Items ({{ returnedItems.length }})
+      </h2>
+    </div>
+
+    <div class="items-grid">
+      <div class="item-card" *ngFor="let item of returnedItems">
+
+        <div class="item-header">
+          <span class="badge"
+                [ngClass]="item.type === 'Lost' ? 'lost' : 'found'">
+            {{ item.type }}
+          </span>
+        </div>
+
+        <div class="item-meta">
+          <p class="item-field" *ngIf="item.title && item.title.trim()">
+            <span class="field-label">Name:</span> 
+            <span class="field-value">{{ item.title }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.description && item.description.trim()">
+            <span class="field-label">Description:</span> 
+            <span class="field-value">{{ item.description }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.location && item.location.trim()">
+            <span class="field-label">Location:</span> 
+            <span class="field-value">{{ item.location }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="item.date">
+            <span class="field-label">Date:</span> 
+            <span class="field-value">{{ item.date | date:'MMM d, y, h:mm:ss a' }} UTC</span>
+          </p>
+
+          <p class="item-field">
+            <span class="field-label">Status:</span> 
+            <span class="status returned">Returned</span>
+          </p>
+
+          <p class="item-field">
+            <span class="field-label">Reported by:</span> 
+            <span class="field-value">{{ item.user?.name || 'Anonymous' }}</span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- NO ITEMS STATE -->
+  <div *ngIf="!loading && lostItems.length === 0 && foundItems.length === 0 && returnedItems.length === 0" class="no-items-state">
+    <h3>No items found</h3>
+    <p>There are currently no items to browse. Check back later!</p>
+  </div>
+
+  <!-- LOADING AND ERROR STATES -->
+  <div *ngIf="loading" class="loading">
+    Loading items...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
   </div>
 
 </div>

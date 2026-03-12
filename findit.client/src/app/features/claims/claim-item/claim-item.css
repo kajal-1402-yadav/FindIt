@@ -1,39 +1,185 @@
-.claim-page {
-  display: flex;
-  justify-content: center;
+/* PAGE HEADER - Matching Create Item */
+
+.page-header {
+  text-align: center;
   margin-top: 40px;
+  margin-bottom: 30px;
 }
 
-.claim-card {
-  width: 700px;
+.page-header h1 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.page-header p {
+  max-width: 600px;
+  margin: auto;
+  color: #666;
+}
+
+/* MAIN LAYOUT - Matching Create Item */
+
+.create-container {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 40px;
+  max-width: 950px;
+  margin: auto;
+}
+
+/* FORM CARD - Matching Create Item */
+
+.form-section {
+  background: rgb(240, 244, 243);
   padding: 30px;
   border-radius: 12px;
-  background: rgba(0,0,0,0.6);
-  color: white;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
 }
 
-.item-image {
-  width: 200px;
-  margin-top: 10px;
+/* ITEM PREVIEW */
+
+.item-preview {
+  background: #f8f9fa;
+  padding: 20px;
   border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #e9ecef;
 }
 
-.claim-form {
-  margin-top: 20px;
+.item-preview h3 {
+  margin-bottom: 15px;
+  color: #333;
 }
 
-textarea {
+.preview-content p {
+  margin: 8px 0;
+  color: #666;
+}
+
+.preview-content strong {
+  color: #333;
+  margin-right: 8px;
+}
+
+/* FORM GROUP - Matching Create Item */
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group textarea {
   width: 100%;
   height: 120px;
-  padding: 10px;
-  margin-top: 10px;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  color: #333;
+  font-size: 14px;
+  resize: vertical;
 }
 
+.form-group textarea::placeholder {
+  color: #999;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: #6BE12C;
+  box-shadow: 0 0 0 3px rgba(107,225,44,0.1);
+}
+
+/* BADGE STYLING */
+
+.badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge.lost {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+.badge.found {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+/* BUTTON - Matching Create Item */
+
 .submit-btn {
-  margin-top: 15px;
-  padding: 10px 20px;
-  background: #22c55e;
+  width: 100%;
+  padding: 12px 24px;
+  background: #6BE12C;
+  color: #022C22;
   border: none;
   border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
+  transition: 0.2s;
+}
+
+.submit-btn:hover {
+  background: #4ADE1A;
+  transform: translateY(-1px);
+}
+
+/* TIPS SECTION - Matching Create Item */
+
+.tips-section {
+  background: rgb(240, 244, 243);
+  padding: 25px;
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+}
+
+.tips-section h3 {
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.tips-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tips-section li {
+  padding: 8px 0;
+  color: #666;
+  position: relative;
+  padding-left: 20px;
+}
+
+.tips-section li::before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #6BE12C;
+  font-weight: bold;
+}
+
+/* ERROR MESSAGES */
+
+.error-message {
+  color: #ef4444;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #666;
 }

@@ -1,11 +1,8 @@
 <div class="details-page">
 
-  <div *ngIf="loading" class="loading">
-    Loading item details...
-  </div>
-
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
+  <div class="page-title">
+    <h1>Item Details</h1>
+    <div class="page-underline"></div>
   </div>
 
   <div class="item-card" *ngIf="!loading && item">
@@ -18,7 +15,9 @@
         {{ item.description }}
       </p>
 
-      <p>📍 {{ item.location }}</p>
+      <p class="location">
+        📍 {{ item.location }}
+      </p>
 
       <p>
         Type:
@@ -46,49 +45,98 @@
 
   <!-- CLAIMS SECTION -->
 
-  <div *ngIf="item && currentUserId === item.UserId" class="claims-section">
+  <div *ngIf="item" class="claims-section">
 
     <h3>Claims for this Item</h3>
 
-    <div *ngIf="claims.length === 0">
-      No claims yet.
-    </div>
+    <!-- OWNER VIEW - Can approve/deny claims -->
+    <div *ngIf="currentUserId === item.userId">
+      
+      <div *ngIf="claims.length === 0">
+        No claims yet.
+      </div>
 
-    <div *ngFor="let claim of claims" class="claim-card">
+      <div *ngFor="let claim of claims" class="claim-card">
 
-      <p><strong>User:</strong> {{ claim.user?.name }}</p>
+        <p><strong>Claimant:</strong> {{ claim.user?.name }}</p>
 
-      <p><strong>Message:</strong></p>
+        <p><strong>Message:</strong></p>
 
-      <p class="claim-message">
-        {{ claim.message }}
-      </p>
+        <p class="claim-message">
+          {{ claim.message }}
+        </p>
 
-      <p>Status: {{ claim.status }}</p>
+        <p>Status: {{ claim.status }}</p>
 
-      <div *ngIf="claim.status === 'Pending'" class="claim-actions">
+        <div *ngIf="claim.status === 'Pending'" class="claim-actions">
 
-        <button class="approve-btn"
-                (click)="approveClaim(claim.id)">
-          Approve
-        </button>
+          <button class="approve-btn"
+                  (click)="approveClaim(claim.id)">
+            Approve
+          </button>
 
-        <button class="reject-btn"
-                (click)="rejectClaim(claim.id)">
-          Reject
-        </button>
+          <button class="reject-btn"
+                  (click)="rejectClaim(claim.id)">
+            Reject
+          </button>
+
+        </div>
+
+        <div *ngIf="claim.status === 'Approved'" class="approved-msg">
+
+          Claim Approved
+          Contact the finder to arrange item pickup.
+
+        </div>
 
       </div>
 
-      <div *ngIf="claim.status === 'Approved'" class="approved-msg">
+    </div>
 
-        Claim Approved
-        Contact the finder to arrange item pickup.
+    <!-- CLAIMANT VIEW - Can see their own claim status -->
+    <div *ngIf="currentUserId !== item.userId">
 
+      <div *ngFor="let claim of claims" class="claim-card">
+        
+        <div *ngIf="claim.userId === currentUserId">
+          <p><strong>Your Claim Status:</strong> {{ claim.status }}</p>
+          <p><strong>Your Message:</strong> {{ claim.message }}</p>
+          
+          <div *ngIf="claim.status === 'Approved'" class="approved-msg">
+            🎉 Your claim has been approved! Contact the item owner to arrange pickup.
+          </div>
+          
+          <div *ngIf="claim.status === 'Rejected'" class="rejected-msg">
+            ❌ Your claim has been rejected.
+          </div>
+          
+          <div *ngIf="claim.status === 'Pending'" class="pending-msg">
+            ⏳ Your claim is pending approval from the item owner.
+          </div>
+        </div>
+
+      </div>
+
+      <div *ngIf="claims.length === 0 || !claims.some(claim => claim.userId === currentUserId)" class="no-claim-info">
+        You haven't claimed this item yet.
+        <button class="claim-btn" 
+                [routerLink]="['/claim', item.id]"
+                *ngIf="item.type === 'Found' && item.status === 'Open'">
+          Claim This Item
+        </button>
       </div>
 
     </div>
 
+  </div>
+
+  <!-- LOADING AND ERROR STATES -->
+  <div *ngIf="loading" class="loading">
+    Loading item details...
+  </div>
+
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
   </div>
 
 </div>

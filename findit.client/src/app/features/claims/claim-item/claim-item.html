@@ -1,39 +1,76 @@
 <div class="claim-page">
 
-  <div *ngIf="loading" class="loading">
-    Loading item details...
+  <div class="page-header">
+
+    <h1>Claim This Item</h1>
+
+    <p>
+      Think this item belongs to you? Provide details below to help
+      the item owner verify your claim.
+    </p>
+
   </div>
 
-  <div *ngIf="errorMessage" class="error-message">
-    {{ errorMessage }}
-  </div>
+  <div class="create-container">
 
-  <div class="claim-card" *ngIf="!loading && item">
+    <div class="form-section">
 
-    <h2>Claim Item</h2>
+      <div *ngIf="loading" class="loading">
+        Loading item details...
+      </div>
 
-    <div class="item-info">
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
 
-      <h3>{{ item.title }}</h3>
+      <div class="item-preview" *ngIf="!loading && item">
 
-      <p>{{ item.description }}</p>
+        <h3>Item Details</h3>
+        
+        <div class="preview-content">
+          <p><strong>Title:</strong> {{ item.title }}</p>
+          <p><strong>Description:</strong> {{ item.description }}</p>
+          <p><strong>Location:</strong> {{ item.location }}</p>
+          <p><strong>Type:</strong> 
+            <span class="badge" [ngClass]="item.type === 'Lost' ? 'lost' : 'found'">
+              {{ item.type }}
+            </span>
+          </p>
+        </div>
 
-      <p>📍 {{ item.location }}</p>
+      </div>
 
-      <p><strong>Type:</strong> {{ item.type }}</p>
+      <form (ngSubmit)="submitClaim()">
+
+        <div class="form-group">
+          <label>Explain why this item belongs to you</label>
+          <textarea [(ngModel)]="message" 
+                    name="message"
+                    placeholder="Example: My student ID card is inside the wallet, it has my name and photo..."></textarea>
+          <div *ngIf="formSubmitted && !message.trim()" class="error-message">
+            Please explain why this item belongs to you
+          </div>
+        </div>
+
+        <button type="submit" class="submit-btn">
+          Submit Claim
+        </button>
+
+      </form>
 
     </div>
 
-    <div class="claim-form">
+    <div class="tips-section">
 
-      <label>Explain why this item belongs to you</label>
+      <h3>Tips for Claiming</h3>
 
-      <textarea [(ngModel)]="message"
-                placeholder="Example: My student ID card is inside the wallet..."></textarea>
-
-      <button class="submit-btn" (click)="submitClaim()">
-        Submit Claim
-      </button>
+      <ul>
+        <li>Be specific about identifying features</li>
+        <li>Mention personal details only you would know</li>
+        <li>Describe when and where you lost the item</li>
+        <li>Include any unique markings or contents</li>
+        <li>Date and time is recorded automatically.</li>
+      </ul>
 
     </div>
 

@@ -1,9 +1,13 @@
-<div class="items-page">
+<div class="my-items-page">
 
-  <h2 class="page-title">My Reported Items</h2>
+  <!-- REPORTED ITEMS SECTION -->
+  <div class="page-title" *ngIf="!loading">
+    <h1>My Reported Items</h1>
+    <div class="page-underline"></div>
+  </div>
 
   <div *ngIf="loading" class="loading">
-    Loading your items...
+    Loading your reported items...
   </div>
 
   <div *ngIf="errorMessage" class="error-message">
@@ -14,31 +18,250 @@
     You haven't reported any items yet.
   </div>
 
-  <div class="items-grid" *ngIf="!loading && items.length > 0">
+  <div class="section-container" *ngIf="!loading && items.length > 0">
+    <div class="items-grid">
+      <div class="item-card" *ngFor="let item of items">
 
-    <div class="item-card" *ngFor="let item of items">
+        <div class="item-header">
+          <span class="badge"
+                [ngClass]="item.type === 'Lost' ? 'lost' : 'found'">
+            {{ item.type }}
+          </span>
+        </div>
 
-      <h3>{{ item.title }}</h3>
+        <div class="item-meta">
+          <p class="item-field" *ngIf="item.title && item.title.trim()">
+            <span class="field-label">Name:</span> 
+            <span class="field-value">{{ item.title }}</span>
+          </p>
 
-      <p>{{ item.description }}</p>
+          <p class="item-field" *ngIf="item.description && item.description.trim()">
+            <span class="field-label">Description:</span> 
+            <span class="field-value">{{ item.description }}</span>
+          </p>
 
-      <p>📍 {{ item.location }}</p>
+          <p class="item-field" *ngIf="item.location && item.location.trim()">
+            <span class="field-label">Location:</span> 
+            <span class="field-value">{{ item.location }}</span>
+          </p>
 
-      <p>Status: {{ item.status }}</p>
+          <p class="item-field" *ngIf="item.date">
+            <span class="field-label">Date:</span> 
+            <span class="field-value">{{ item.date | date:'MMM d, y, h:mm:ss a' }} UTC</span>
+          </p>
 
-      <div class="card-actions">
+          <p class="item-field">
+            <span class="field-label">Status:</span> 
+            <span class="status"
+                  [ngClass]="{
+                    'open': item.status === 'Open',
+                    'returned': item.status === 'Returned'
+                  }">
+              {{ item.status }}
+            </span>
+          </p>
+        </div>
 
-        <button [routerLink]="['/item', item.id]"
-                class="details-btn">
+        <!-- CLAIM NOTIFICATION -->
+        <div *ngIf="itemClaims[item.id] && itemClaims[item.id].length > 0" class="claim-notification">
+          <span class="notification-text">New Claim Request</span>
+          <button class="review-claims-btn" (click)="openClaimModalForItem(item.id)">
+            Review Claims
+          </button>
+        </div>
 
-          View Details
-
-        </button>
+        <!-- ITEM ACTIONS -->
+        <div class="item-actions">
+          <button class="edit-btn" (click)="openEditModal(item)">
+            Edit
+          </button>
+          <button class="delete-btn" (click)="deleteItem(item.id)">
+            Delete
+          </button>
+        </div>
 
       </div>
-
     </div>
+  </div>
 
+  <!-- Success Message -->
+  <div *ngIf="deleteSuccessMessage" class="success-message">
+    {{ deleteSuccessMessage }}
+  </div>
+
+  <!-- CLAIMED ITEMS SECTION -->
+  <div class="page-title" *ngIf="!claimedLoading">
+    <h1>My Claimed Items</h1>
+    <div class="page-underline claimed-underline"></div>
+  </div>
+
+  <div *ngIf="claimedLoading" class="loading">
+    Loading your claimed items...
+  </div>
+
+  <div *ngIf="claimedErrorMessage" class="error-message">
+    {{ claimedErrorMessage }}
+  </div>
+
+  <div *ngIf="!claimedLoading && claimedItems.length === 0 && !claimedErrorMessage" class="no-items">
+    You haven't claimed any items yet.
+  </div>
+
+  <div class="section-container" *ngIf="!claimedLoading && claimedItems.length > 0">
+    <div class="items-grid">
+      <div class="item-card" *ngFor="let claimedItem of claimedItems">
+
+        <div class="item-header">
+          <span class="badge"
+                [ngClass]="claimedItem.type === 'Lost' ? 'lost' : 'found'">
+            {{ claimedItem.type }}
+          </span>
+        </div>
+
+        <div class="item-meta">
+          <p class="item-field" *ngIf="claimedItem.title && claimedItem.title.trim()">
+            <span class="field-label">Name:</span> 
+            <span class="field-value">{{ claimedItem.title }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="claimedItem.description && claimedItem.description.trim()">
+            <span class="field-label">Description:</span> 
+            <span class="field-value">{{ claimedItem.description }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="claimedItem.location && claimedItem.location.trim()">
+            <span class="field-label">Location:</span> 
+            <span class="field-value">{{ claimedItem.location }}</span>
+          </p>
+
+          <p class="item-field" *ngIf="claimedItem.date">
+            <span class="field-label">Date:</span> 
+            <span class="field-value">{{ claimedItem.date | date:'MMM d, y, h:mm:ss a' }} UTC</span>
+          </p>
+
+          <p class="item-field">
+            <span class="field-label">Claim Status:</span> 
+            <span class="claim-status"
+                  [ngClass]="{
+                    'approved': claimedItem.statusType === 'approved',
+                    'denied': claimedItem.statusType === 'denied',
+                    'pending': claimedItem.statusType === 'pending',
+                    'unknown': claimedItem.statusType === 'unknown'
+                  }">
+              {{ claimedItem.claimStatus }}
+            </span>
+          </p>
+
+          <p class="item-field" *ngIf="claimedItem.claimMessage">
+            <span class="field-label">Your Message:</span> 
+            <span class="field-value">{{ claimedItem.claimMessage }}</span>
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- EDIT ITEM MODAL -->
+  <div class="modal-overlay" *ngIf="showEditModal" (click)="closeEditModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="header-content">
+          <div class="header-text">
+            <h3>Edit Item</h3>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeEditModal()">
+          <span class="close-icon">×</span>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <form (ngSubmit)="updateItem()">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" [(ngModel)]="editForm.title" name="title" required>
+          </div>
+
+          <div class="form-group">
+            <label>Description</label>
+            <textarea [(ngModel)]="editForm.description" name="description" required></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" [(ngModel)]="editForm.location" name="location" required>
+          </div>
+
+          <div class="form-group">
+            <label>Type</label>
+            <div class="type-toggle">
+              <button type="button"
+                      [class.active]="editForm.type==='Lost'"
+                      (click)="editForm.type='Lost'">
+                Lost Item
+              </button>
+              <button type="button"
+                      [class.active]="editForm.type==='Found'"
+                      (click)="editForm.type='Found'">
+                Found Item
+              </button>
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button type="button" class="cancel-btn" (click)="closeEditModal()">
+              Cancel
+            </button>
+            <button type="submit" class="save-btn">
+              Save Changes
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- CLAIM REVIEW MODAL -->
+  <div class="modal-overlay" *ngIf="showModal" (click)="closeModal()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <div class="header-content">
+          <div class="header-text">
+            <h3>Review Claim</h3>
+          </div>
+        </div>
+        <button class="close-btn" (click)="closeModal()">
+          <span class="close-icon">×</span>
+        </button>
+      </div>
+
+      <div class="modal-body" *ngIf="selectedClaim">
+        <div class="claim-info">
+          <div class="info-item">
+            <span class="info-label">Item:</span>
+            <span class="info-value">{{ selectedClaim.item?.title }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Claimant:</span>
+            <span class="info-value">{{ selectedClaim.user?.name || 'Unknown User' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="info-label">Message:</span>
+            <span class="info-value">{{ selectedClaim.message }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="deny-btn" (click)="denyClaim()">
+          <span class="btn-text">Deny</span>
+        </button>
+        <button class="approve-btn" (click)="approveClaim()">
+          <span class="btn-text">Approve</span>
+        </button>
+      </div>
+    </div>
   </div>
 
 </div>

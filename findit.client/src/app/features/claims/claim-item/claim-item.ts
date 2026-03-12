@@ -17,6 +17,7 @@ export class ClaimItem implements OnInit {
   message = '';
   loading = true;
   errorMessage = '';
+  formSubmitted = false;
 
   constructor(
     private route: ActivatedRoute,
@@ -57,6 +58,8 @@ export class ClaimItem implements OnInit {
 
   submitClaim() {
 
+    this.formSubmitted = true;
+
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
     if (!user.userId) {
@@ -66,7 +69,7 @@ export class ClaimItem implements OnInit {
     }
 
     if (!this.message.trim()) {
-      alert("Please write a message explaining why this item is yours.");
+      // Validation error will show in the template
       return;
     }
 

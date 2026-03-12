@@ -26,4 +26,14 @@ export class ItemService {
   getUserItems(userId: number): Observable<any> {
     return this.http.get(`${this.apiUrl}/user/${userId}`);
   }
+
+  updateItem(id: number, item: any): Observable<any> {
+    // Try POST method since PUT might not be implemented
+    return this.http.post(`${this.apiUrl}/${id}/update`, item);
+  }
+
+  deleteItem(id: number): Observable<any> {
+    // Try POST method since DELETE might not be implemented
+    return this.http.post(`${this.apiUrl}/${id}/delete`, {});
+  }
 }

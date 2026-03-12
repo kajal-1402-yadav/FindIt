@@ -10,6 +10,9 @@ import { ItemService } from '../../../core/services/item.service';
 export class ItemList implements OnInit {
 
   items: any[] = [];
+  lostItems: any[] = [];
+  foundItems: any[] = [];
+  returnedItems: any[] = [];
   loading: boolean = true;
   errorMessage: string = '';
   currentUserId: number | null = null;
@@ -51,6 +54,9 @@ export class ItemList implements OnInit {
           return shouldInclude;
         });
         
+        // Categorize items
+        this.categorizeItems();
+        
         console.log(`Filtered ${allItems.length} items to ${this.items.length}`);
         this.loading = false;
         
@@ -66,6 +72,18 @@ export class ItemList implements OnInit {
         this.loading = false;
         this.cdr.detectChanges();
       }
+    });
+  }
+
+  categorizeItems() {
+    this.lostItems = this.items.filter(item => item.type === 'Lost' && item.status === 'Open');
+    this.foundItems = this.items.filter(item => item.type === 'Found' && item.status === 'Open');
+    this.returnedItems = this.items.filter(item => item.status === 'Returned');
+    
+    console.log('Categorized items:', {
+      lost: this.lostItems.length,
+      found: this.foundItems.length,
+      returned: this.returnedItems.length
     });
   }
 

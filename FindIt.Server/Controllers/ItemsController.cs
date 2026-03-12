@@ -3,6 +3,7 @@ using FindIt.Server.DTOs;
 using FindIt.Server.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Data.SqlClient;
 
 namespace FindIt.Server.Controllers
 {
@@ -23,7 +24,7 @@ namespace FindIt.Server.Controllers
         public IActionResult Test()
         {
             Console.WriteLine("=== Test endpoint called ===");
-            return Ok(new { message = "Backend is working!", timestamp = DateTime.UtcNow });
+            return Ok(new { message = "Backend is working!", timestamp = DateTime.UtcNow.AddHours(5.5) });
         }
 
         // GET: api/items/{id}
@@ -88,7 +89,7 @@ namespace FindIt.Server.Controllers
                 Location = dto.Location,
                 Type = dto.Type,
                 UserId = dto.UserId,
-                Date = DateTime.UtcNow,
+                Date = DateTime.UtcNow.AddHours(5.5),
                 Status = "Open",
                 ImageUrl = null
             };
@@ -110,6 +111,109 @@ namespace FindIt.Server.Controllers
             };
 
             return Ok(response);
+        }
+
+        // POST: api/items/{id}/update
+        // Update an existing item
+        [HttpPost("{id}/update")]
+        public async Task<IActionResult> UpdateItem(int id, [FromBody] ItemCreateDto dto)
+        {
+            Console.WriteLine("=== UpdateItem called ===");
+            Console.WriteLine($"Item ID: {id}");
+            Console.WriteLine($"Title: {dto.Title}");
+            Console.WriteLine($"Description: {dto.Description}");
+            Console.WriteLine($"Location: {dto.Location}");
+            Console.WriteLine($"Type: {dto.Type}");
+
+            var item = await _context.Items.FindAsync(id);
+            if (item == null)
+            {
+                return NotFound(new { message = "Item not found" });
+            }
+
+            // Update item properties
+            item.Title = dto.Title;
+            item.Description = dto.Description;
+            item.Location = dto.Location;
+            item.Type = dto.Type;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                var response = new ItemResponseDto
+                {
+                    Id = item.Id,
+                    Title = item.Title,
+                    Description = item.Description,
+                    Location = item.Location,
+                    Date = item.Date,
+                    Type = item.Type,
+                    Status = item.Status,
+                    ImageUrl = item.ImageUrl,
+                    UserId = item.UserId
+                };
+
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error updating item: {ex.Message}");
+                return StatusCode(500, new { message = "Error updating item" });
+            }
+        }
+
+        // POST: api/items/{id}/delete
+        // Delete an existing item
+        [HttpPost("{id}/delete")]
+        public async Task<IActionResult> DeleteItem(int id)
+        {
+            Console.WriteLine("=== DeleteItem called ===");
+            Console.WriteLine($"Item ID: {id}");
+
+            using var transaction = await _context.Database.BeginTransactionAsync();
+            
+            try
+            {
+                // Step 1: Delete all claims related to this item using raw SQL
+                var deleteClaimsSql = "DELETE FROM Claims WHERE ItemId = @itemId";
+                var claimsDeleted = await _context.Database.ExecuteSqlRawAsync(deleteClaimsSql, new SqlParameter("@itemId", id));
+                Console.WriteLine($"Deleted {claimsDeleted} claims using raw SQL");
+
+                // Step 2: Delete the item using raw SQL
+                var deleteItemSql = "DELETE FROM Items WHERE Id = @itemId";
+                var itemsDeleted = await _context.Database.ExecuteSqlRawAsync(deleteItemSql, new SqlParameter("@itemId", id));
+                Console.WriteLine($"Deleted {itemsDeleted} items using raw SQL");
+
+                if (itemsDeleted == 0)
+                {
+                    await transaction.RollbackAsync();
+                    return NotFound(new { message = "Item not found" });
+                }
+
+                // Commit the transaction
+                await transaction.CommitAsync();
+                Console.WriteLine("Transaction committed successfully");
+
+                return Ok(new { message = "Item deleted successfully" });
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                Console.WriteLine($"Error deleting item: {ex.Message}");
+                Console.WriteLine($"Stack trace: {ex.StackTrace}");
+                
+                // Check for specific database errors
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
+                }
+                
+                return StatusCode(500, new { 
+                    message = "Error deleting item", 
+                    error = ex.Message 
+                });
+            }
         }
     }
 }

@@ -23,6 +23,11 @@ export class ClaimService {
     return this.http.get(`${this.apiUrl}/user/${userId}`);
   }
 
+  getClaimedItems(userId: number): Observable<any> {
+    // Use the existing endpoint and filter for approved claims
+    return this.http.get(`${this.apiUrl}/user/${userId}`);
+  }
+
   approveClaim(id: number): Observable<any> {
     return this.http.put(`${this.apiUrl}/${id}/approve`, {});
   }
