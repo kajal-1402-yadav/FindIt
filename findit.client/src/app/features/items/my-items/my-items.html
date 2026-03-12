@@ -62,8 +62,13 @@
         </div>
 
         <!-- CLAIM NOTIFICATION -->
-        <div *ngIf="itemClaims[item.id] && itemClaims[item.id].length > 0" class="claim-notification">
-          <span class="notification-text">New Claim Request</span>
+        <div *ngIf="itemClaims[item.id] as claims && item.status !== 'Returned' && item.status !== 'report denied'" class="claim-notification">
+          <span class="notification-text">🔔 New Claim Request</span>
+          <div class="claim-details" *ngFor="let claim of claims">
+            <p><strong>Claimant:</strong> {{ claim.user?.name || 'Unknown' }}</p>
+            <p><strong>Message:</strong> {{ claim.message }}</p>
+            <p><strong>Status:</strong> <span class="claim-badge" [ngClass]="claim.status?.toLowerCase()">{{ claim.status }}</span></p>
+          </div>
           <button class="review-claims-btn" (click)="openClaimModalForItem(item.id)">
             Review Claims
           </button>

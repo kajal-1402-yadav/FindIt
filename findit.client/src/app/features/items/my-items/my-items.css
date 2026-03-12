@@ -150,16 +150,58 @@
   background: #FEF3C7;
   border: 1px solid #F59E0B;
   border-radius: 8px;
-  text-align: center;
 }
 
 .notification-text {
-  margin: 0 0 8px 0;
+  margin: 0 0 12px 0;
   font-weight: 600;
+  color: #D97706;
+  display: block;
+}
+
+.claim-details {
+  background: white;
+  padding: 10px;
+  border-radius: 6px;
+  margin-bottom: 10px;
+  text-align: left;
+  border-left: 3px solid #F59E0B;
+}
+
+.claim-details p {
+  margin: 6px 0;
+  font-size: 13px;
+  color: #333;
+}
+
+.claim-details strong {
   color: #D97706;
 }
 
-.view-claims-btn {
+.claim-badge {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+  display: inline-block;
+}
+
+.claim-badge.pending {
+  background: #FEF3C7;
+  color: #D97706;
+}
+
+.claim-badge.approved {
+  background: #DCFCE7;
+  color: #166534;
+}
+
+.claim-badge.rejected {
+  background: #FEE2E2;
+  color: #B91C1C;
+}
+
+.review-claims-btn {
   background: #F59E0B;
   color: white;
   border: none;
@@ -168,9 +210,10 @@
   cursor: pointer;
   font-weight: 600;
   transition: 0.2s;
+  width: 100%;
 }
 
-.view-claims-btn:hover {
+.review-claims-btn:hover {
   background: #D97706;
 }
 

@@ -21,7 +21,7 @@ export class MyItems implements OnInit {
   deleteSuccessMessage: string = '';
 
   // Claim modal properties
-  itemClaims: any[] = [];
+  itemClaims: any = {};
   showModal: boolean = false;
   selectedClaim: any = null;
 
@@ -137,21 +137,20 @@ export class MyItems implements OnInit {
     // Load claims for user's reported items
     this.itemService.getUserItems(userId).subscribe({
       next: (items) => {
-        this.itemClaims = [];
+        this.itemClaims = {};
         
         // Load claims for each item
         items.forEach((item: any) => {
           this.claimService.getClaimsForItem(item.id).subscribe({
             next: (claims) => {
               if (claims && claims.length > 0) {
-                // Add pending claims to the list
-                const pendingClaims = claims.filter((claim: any) => claim.status === 'Pending');
-                pendingClaims.forEach((claim: any) => {
-                  this.itemClaims.push({
+                // Store only pending claims for notification cards
+                this.itemClaims[item.id] = claims
+                  .filter((claim: any) => claim.status === 'Pending')
+                  .map((claim: any) => ({
                     ...claim,
                     item: item
-                  });
-                });
+                  }));
               }
               this.cdr.detectChanges();
             },
@@ -168,7 +167,8 @@ export class MyItems implements OnInit {
   }
 
   hasPendingClaims(itemId: number): boolean {
-    return this.itemClaims.some((claim: any) => claim.itemId === itemId && claim.status === 'Pending');
+    const claims = this.itemClaims[itemId] || [];
+    return claims.some((claim: any) => claim.status === 'Pending');
   }
 
   // Edit and Delete methods
@@ -250,7 +250,8 @@ export class MyItems implements OnInit {
 
   openClaimModalForItem(itemId: number) {
     // Find the first pending claim for this item
-    const claim = this.itemClaims.find(c => c.itemId === itemId && c.status === 'Pending');
+    const claims = this.itemClaims[itemId] || [];
+    const claim = claims.find((c: any) => c.status === 'Pending');
     if (claim) {
       this.openClaimModal(claim);
     }
@@ -268,7 +269,12 @@ export class MyItems implements OnInit {
       next: () => {
         alert('Claim approved successfully!');
         this.closeModal();
-        this.loadItemClaims(JSON.parse(localStorage.getItem('user') || '{}').userId);
+        // Refresh both reported items and claims to remove approved claim from card
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.userId) {
+          this.loadReportedItems(user.userId);
+          this.loadItemClaims(user.userId);
+        }
       },
       error: (err) => {
         console.error('Error approving claim:', err);
@@ -284,7 +290,12 @@ export class MyItems implements OnInit {
       next: () => {
         alert('Claim denied successfully! The item is now available for others to claim.');
         this.closeModal();
-        this.loadItemClaims(JSON.parse(localStorage.getItem('user') || '{}').userId);
+        // Refresh both reported items and claims to remove denied claim from card
+        const user = JSON.parse(localStorage.getItem('user') || '{}');
+        if (user.userId) {
+          this.loadReportedItems(user.userId);
+          this.loadItemClaims(user.userId);
+        }
       },
       error: (err) => {
         console.error('Error denying claim:', err);
