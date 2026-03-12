@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { ItemService } from '../../../core/services/item.service';
 
@@ -14,13 +14,18 @@ export class CreateItem {
   description = '';
   location = '';
   type = 'Lost';
+  showSuccessMessage = false;
+  formSubmitted = false;
 
   constructor(
     private itemService: ItemService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) { }
 
   createItem() {
+    console.log('createItem called');
+    this.formSubmitted = true;
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
 
@@ -31,8 +36,8 @@ export class CreateItem {
     }
 
     if (!this.title.trim() || !this.description.trim() || !this.location.trim()) {
-      alert("Please fill all required fields");
-      return;
+      console.log('Validation failed:', { title: this.title, description: this.description, location: this.location });
+      return; // Error messages will show in template
     }
 
     // Send as JSON, not FormData (backend expects [FromBody])
@@ -47,12 +52,27 @@ export class CreateItem {
     console.log('Creating item:', itemData);
     this.itemService.createItem(itemData).subscribe({
       next: () => {
-        alert("Item reported successfully");
+        console.log('Success callback reached');
+        // Show success message
+        this.showSuccessMessage = true;
+        this.formSubmitted = false; // Reset validation state
+        
+        // Clear form
         this.title = '';
         this.description = '';
         this.location = '';
         this.type = 'Lost';
-        this.router.navigate(['/dashboard']);
+        
+        console.log('Success message set to:', this.showSuccessMessage);
+        
+        // Force UI update
+        this.cdr.detectChanges();
+        
+        // Hide message after 3 seconds
+        setTimeout(() => {
+          this.showSuccessMessage = false;
+          this.cdr.detectChanges();
+        }, 3000);
       },
       error: (err) => {
         console.error(err);
