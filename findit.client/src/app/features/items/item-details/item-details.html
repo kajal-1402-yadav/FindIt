@@ -46,7 +46,7 @@
 
   <!-- CLAIMS SECTION -->
 
-  <div *ngIf="currentUserId === item.userId" class="claims-section">
+  <div *ngIf="item && currentUserId === item.UserId" class="claims-section">
 
     <h3>Claims for this Item</h3>
 

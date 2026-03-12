@@ -39,8 +39,19 @@ export class ItemList implements OnInit {
         console.log('Data type:', typeof data);
         console.log('Data length:', data?.length);
         
-        // Ensure data is an array
-        this.items = Array.isArray(data) ? data : [];
+        // Ensure data is an array and filter out current user's items
+        const allItems = Array.isArray(data) ? data : [];
+        console.log('Current user ID:', this.currentUserId);
+        console.log('First item full structure:', allItems[0]);
+        console.log('All items with their UserIds:', allItems.map(item => ({id: item.id, userId: item.userId})));
+        
+        this.items = allItems.filter((item: any) => {
+          const shouldInclude = !this.currentUserId || item.userId !== this.currentUserId;
+          console.log(`Item ${item.id}: userId=${item.userId}, CurrentUserId=${this.currentUserId}, Include=${shouldInclude}`);
+          return shouldInclude;
+        });
+        
+        console.log(`Filtered ${allItems.length} items to ${this.items.length}`);
         this.loading = false;
         
         // Force change detection
