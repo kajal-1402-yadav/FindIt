@@ -223,27 +223,24 @@ export class MyItems implements OnInit {
   }
 
   deleteItem(itemId: number) {
-    if (confirm('Are you sure you want to delete this item? This action cannot be undone.')) {
-      this.itemService.deleteItem(itemId).subscribe({
-        next: () => {
-          this.deleteSuccessMessage = 'Item deleted successfully';
-          this.closeEditModal();
-          if (this.currentUserId) {
-            this.loadReportedItems(this.currentUserId);
-          }
-        },
-        error: (err: any) => {
-          console.error('Error deleting item:', err);
-          if (err.status === 405 || err.status === 404) {
-            // Delete functionality is not yet available on the server
-            this.closeEditModal();
-          } else {
-            // Failed to delete item
-            this.closeEditModal();
-          }
+    this.itemService.deleteItem(itemId).subscribe({
+      next: () => {
+        this.closeEditModal();
+        if (this.currentUserId) {
+          this.loadReportedItems(this.currentUserId);
         }
-      });
-    }
+      },
+      error: (err: any) => {
+        console.error('Error deleting item:', err);
+        if (err.status === 405 || err.status === 404) {
+          // Delete functionality is not yet available on server
+          this.closeEditModal();
+        } else {
+          // Failed to delete item
+          this.closeEditModal();
+        }
+      }
+    });
   }
 
   openClaimModal(claim: any) {

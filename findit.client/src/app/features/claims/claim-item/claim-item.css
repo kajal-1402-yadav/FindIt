@@ -178,6 +178,18 @@
   margin-top: 5px;
 }
 
+.success-message {
+  color: #22c55e;
+  font-size: 14px;
+  margin-top: 5px;
+  font-weight: 500;
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  padding: 8px 12px;
+  border-radius: 6px;
+  text-align: center;
+}
+
 .loading {
   text-align: center;
   padding: 40px;

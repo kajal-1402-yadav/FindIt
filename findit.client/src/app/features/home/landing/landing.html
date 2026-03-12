@@ -4,11 +4,6 @@
   <section class="hero">
 
     <div class="hero-left">
-
-      <span class="tag">
-        RECOVERY REIMAGINED
-      </span>
-
       <h1>
         Find & Recover <br>
         <span>With Ease</span>
@@ -22,18 +17,14 @@
 
       <div class="hero-buttons">
 
-        <a class="lost-btn" routerLink="/dashboard">
+        <a class="lost-btn" (click)="onLostSomething()">
           I lost something
         </a>
 
-        <a class="found-btn" routerLink="/create-item">
+        <a class="found-btn" (click)="onFoundSomething()">
           I found something
         </a>
 
-      </div>
-
-      <div class="stats">
-        Join <b>2,000+</b> people recovering items daily
       </div>
 
     </div>
@@ -42,17 +33,17 @@
     <div class="hero-right">
 
       <div class="card card1">
-        <img src="https://picsum.photos/200" alt="A silver laptop" />
+        <img src="/images/silver-laptop.jpg" alt="A silver laptop" />
         <p>Silver Laptop</p>
       </div>
 
       <div class="card card2">
-        <img src="https://picsum.photos/201" alt="A phone on a table" />
+        <img src="/images/lost-phone.jpg" alt="A phone on a table" />
         <p>Lost Phone</p>
       </div>
 
       <div class="card card3">
-        <img src="https://picsum.photos/202" alt="A brown backpack" />
+        <img src="/images/brown-backpack.jpg" alt="A brown backpack" />
         <p>Brown Backpack</p>
       </div>
 
@@ -60,45 +51,50 @@
 
   </section>
 
-  <!-- RECENTLY REPORTED ITEMS -->
-  <section class="recent">
-    <div class="recent-inner">
-      <div class="recent-header">
-        <h2>Recently Reported Items</h2>
-        <div class="recent-underline"></div>
+  <!-- FEATURES SECTION -->
+  <section class="features">
+    <div class="features-inner">
+      <div class="features-header">
+        <h2>How It Works</h2>
+        <div class="features-underline"></div>
       </div>
 
-      <div class="recent-grid">
-        <article class="recent-card">
-          <div class="recent-image">
-            <img src="https://images.pexels.com/photos/374885/pexels-photo-374885.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Blue headphones on a table" />
+      <div class="features-grid">
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <path d="M12 6v6l4 2"></path>
+            </svg>
           </div>
-          <div class="recent-body">
-            <span class="pill pill-lost">Lost</span>
-            <h3>Bose Headphones</h3>
-            <p class="recent-meta">City Park North</p>
-          </div>
-        </article>
-
-        <article class="recent-card">
-          <div class="recent-image">
-            <img src="https://images.pexels.com/photos/164571/pexels-photo-164571.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Leather wallet on a desk" />
-          </div>
-          <div class="recent-body">
-            <span class="pill pill-found">Found</span>
-            <h3>Leather Wallet</h3>
-            <p class="recent-meta">Starbucks Downtown</p>
+          <div class="feature-body">
+            <h3>Report Instantly</h3>
+            <p>Quickly report lost or found items with detailed descriptions and photos to increase recovery chances.</p>
           </div>
         </article>
 
-        <article class="recent-card">
-          <div class="recent-image">
-            <img src="https://images.pexels.com/photos/97076/pexels-photo-97076.jpeg?auto=compress&cs=tinysrgb&w=600" alt="Car keys on a teal background" />
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+            </svg>
           </div>
-          <div class="recent-body">
-            <span class="pill pill-found">Found</span>
-            <h3>Car Keys (Toyota)</h3>
-            <p class="recent-meta">Mall Parking Lot</p>
+          <div class="feature-body">
+            <h3>Smart Matching</h3>
+            <p>Our intelligent system automatically matches lost items with found items based on location, description, and time.</p>
+          </div>
+        </article>
+
+        <article class="feature-card">
+          <div class="feature-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </div>
+          <div class="feature-body">
+            <h3>Secure Recovery</h3>
+            <p>Connect with verified owners through our secure messaging system to arrange safe item return.</p>
           </div>
         </article>
       </div>
@@ -109,11 +105,7 @@
   <section class="cta">
     <div class="cta-inner">
       <h2>Ready to find your belongings?</h2>
-      <p>
-        Join thousands of users who have successfully recovered their lost items
-        through our global network.
-      </p>
-      <a class="cta-button" routerLink="/dashboard">
+      <a class="cta-button" (click)="onGetStarted()">
         Get Started Now
       </a>
     </div>
@@ -124,31 +116,31 @@
     <div class="footer-inner">
       <div class="footer-column">
         <h4>Site</h4>
-        <a routerLink="/">Home</a>
-        <a routerLink="/about">About Us</a>
-        <a routerLink="/stories">Success Stories</a>
-        <a routerLink="/press">Press</a>
+        <span>Home</span>
+        <span>About Us</span>
+        <span>Success Stories</span>
+        <span>Press</span>
       </div>
 
       <div class="footer-column">
         <h4>Help</h4>
-        <a routerLink="/safety">Safety Tips</a>
-        <a routerLink="/faq">FAQ</a>
-        <a routerLink="/create-item">Report Abuse</a>
-        <a routerLink="/verify">Verification</a>
+        <span>Safety Tips</span>
+        <span>FAQ</span>
+        <span>Report Abuse</span>
+        <span>Verification</span>
       </div>
 
       <div class="footer-column">
         <h4>Links</h4>
-        <a routerLink="/dashboard">Lost Items</a>
-        <a routerLink="/dashboard">Found Items</a>
-        <a routerLink="/nearby">Nearby Posts</a>
-        <a routerLink="/business">API for Businesses</a>
+        <span>Lost Items</span>
+        <span>Found Items</span>
+        <span>Nearby Posts</span>
+        <span>API for Businesses</span>
       </div>
 
       <div class="footer-column">
         <h4>Contact</h4>
-        <a href="mailto:hello@findit.io">hello@findit.io</a>
+        <span>hello@findit.io</span>
         <span>24/7 Support</span>
         <span>San Francisco, CA</span>
       </div>

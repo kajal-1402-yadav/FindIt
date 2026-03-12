@@ -18,6 +18,7 @@ export class ClaimItem implements OnInit {
   loading = true;
   errorMessage = '';
   formSubmitted = false;
+  successMessage = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -83,15 +84,18 @@ export class ClaimItem implements OnInit {
 
       next: () => {
 
-        alert("Claim submitted successfully!");
+        this.successMessage = 'Claim submitted successfully!';
+        this.cdr.detectChanges();
 
-        this.router.navigate(['/dashboard']);
+        setTimeout(() => {
+          this.router.navigate(['/dashboard']);
+        }, 4000);
 
       },
 
       error: (err) => {
         console.error(err);
-        alert("Failed to submit claim");
+        this.errorMessage = 'Failed to submit claim. Please try again.';
       }
 
     });
