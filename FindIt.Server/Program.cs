@@ -41,24 +41,12 @@ else
         options.UseSqlServer(connectionString));
 }
 
-// Swagger
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 var app = builder.Build();
 
 // Development tools
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "FindIt API V1");
-        c.RoutePrefix = "swagger";
-    });
-
 }
 
 // app.UseHttpsRedirection();

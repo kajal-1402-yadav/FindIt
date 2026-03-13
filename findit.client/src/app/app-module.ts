@@ -14,7 +14,7 @@ import { ItemDetails } from './features/items/item-details/item-details';
 
 import { ClaimItem } from './features/claims/claim-item/claim-item';
 
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Landing } from './features/home/landing/landing';
 import { Navbar } from './shared/components/navbar/navbar';
 import { MyItems } from './features/items/my-items/my-items';
@@ -37,6 +37,7 @@ import { MyItems } from './features/items/my-items/my-items';
     BrowserModule,
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     AppRoutingModule
   ],
   providers: [

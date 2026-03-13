@@ -59,3 +59,37 @@
   .primary-btn:hover {
     background: #27ae60;
   }
+
+.error-message {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+  display: block;
+}
+
+input.error {
+  border-color: #e74c3c !important;
+}
+
+.password-requirements {
+  margin-top: 8px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.requirements-title {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #666;
+}
+
+.requirement-item {
+  margin: 3px 0;
+  color: #e74c3c;
+}
+
+.requirement-item.valid {
+  color: #27ae60;
+}
