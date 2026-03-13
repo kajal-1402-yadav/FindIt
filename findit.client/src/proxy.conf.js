@@ -1,6 +1,8 @@
 const { env } = require('process');
 
-const target = 'http://localhost:5167';
+const target = env.ASPNETCORE_URLS ? 
+  env.ASPNETCORE_URLS.split(';')[0] : 
+  'http://localhost:5167';
 
 const PROXY_CONFIG = [
   {
@@ -11,7 +13,10 @@ const PROXY_CONFIG = [
     target,
     secure: false,
     changeOrigin: true,
-    logLevel: 'debug'
+    logLevel: 'debug',
+    headers: {
+      'Connection': 'Keep-Alive'
+    }
   }
 ]
 

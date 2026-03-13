@@ -15,17 +15,31 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("http://localhost:4200", 
                              "http://localhost:65194",
                              "https://localhost:4200",
-                             "http://localhost:5167")
+                             "https://localhost:65194",
+                             "http://localhost:5167",
+                             "https://localhost:5167")
                   .AllowAnyHeader()
                   .AllowAnyMethod()
                   .AllowCredentials();
         });
 });
 
-// Register DbContext
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
-);
+// Register DbContext with support for both SQL Server and SQLite
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var useSqlite = builder.Configuration.GetValue<bool>("UseSqlite", false);
+
+if (useSqlite || string.IsNullOrEmpty(connectionString) || !connectionString.Contains("mssqllocaldb"))
+{
+    // Use SQLite for development or when SQL Server is not available
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlite(builder.Configuration.GetConnectionString("SqliteConnection") ?? "Data Source=FindIt.db"));
+}
+else
+{
+    // Use SQL Server when available
+    builder.Services.AddDbContext<AppDbContext>(options =>
+        options.UseSqlServer(connectionString));
+}
 
 // Swagger
 builder.Services.AddEndpointsApiExplorer();

@@ -19,7 +19,6 @@ export class ItemService {
   }
 
   createItem(item: any): Observable<any> {
-    console.log('Creating item, type:', typeof item, 'is FormData:', item instanceof FormData);
     return this.http.post(this.apiUrl, item);
   }
 

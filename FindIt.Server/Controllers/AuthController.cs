@@ -22,9 +22,9 @@ public class AuthController : ControllerBase
     [HttpPost("register")]
     public async Task<IActionResult> Register(RegisterDto dto)
     {
-        if (dto.Password.Length < 6)
+        if (!ModelState.IsValid)
         {
-            return BadRequest("Password must be at least 6 characters");
+            return BadRequest(ModelState);
         }
 
         var existingUser = await _context.Users
@@ -50,6 +50,11 @@ public class AuthController : ControllerBase
     [HttpPost("login")]
     public async Task<IActionResult> Login(LoginDto dto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
         var user = await _context.Users
             .FirstOrDefaultAsync(u => u.Email == dto.Email);
 

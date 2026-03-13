@@ -47,6 +47,13 @@
   font-weight: 600;
   box-shadow: 0 10px 25px rgba(239,68,68,0.25);
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lost-btn:hover {
+  background: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(239,68,68,0.35);
 }
 
 .found-btn {
@@ -58,6 +65,13 @@
   font-weight: 600;
   box-shadow: 0 10px 25px rgba(107,225,44,0.25);
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.found-btn:hover {
+  background: #5aa639;
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(107,225,44,0.35);
 }
 
 /* HERO CARDS */
@@ -216,6 +230,13 @@
   font-weight: 600;
   text-decoration: none;
   cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cta-button:hover {
+  background: #1a4028;
+  transform: translateY(-2px);
+  box-shadow: 0 15px 35px rgba(34,197,94,0.35);
 }
 
 /* FOOTER */

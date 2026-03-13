@@ -83,7 +83,7 @@ namespace FindIt.Server.Controllers
             if (claim == null)
                 return NotFound();
 
-            if (claim.Item.Status == "Returned")
+            if (claim.Item?.Status == "Returned")
                 return BadRequest("Item already returned");
 
             claim.Status = "Approved";

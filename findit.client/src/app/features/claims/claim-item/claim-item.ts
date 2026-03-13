@@ -31,21 +31,16 @@ export class ClaimItem implements OnInit {
   ngOnInit(): void {
 
     this.itemId = Number(this.route.snapshot.paramMap.get('itemId'));
-    console.log('Loading claim item for ID:', this.itemId);
 
     this.loadItem();
   }
 
   loadItem() {
-    console.log('Loading item for claim...');
     this.itemService.getItem(this.itemId).subscribe({
       next: (data) => {
-        console.log('Item loaded for claim:', data);
         this.item = data;
         this.loading = false;
         this.cdr.detectChanges();
-        console.log('Final claim item:', this.item);
-        console.log('Loading state:', this.loading);
       },
       error: (err) => {
         console.error('Error loading item for claim:', err);

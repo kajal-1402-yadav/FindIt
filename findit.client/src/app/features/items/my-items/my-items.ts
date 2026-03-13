@@ -21,17 +21,20 @@ export class MyItems implements OnInit {
   deleteSuccessMessage: string = '';
 
   // Claim modal properties
-  itemClaims: any = {};
-  showModal: boolean = false;
+  // Map of itemId -> list of claims (only pending claims are stored)
+  itemClaims: Record<number, any[]> = {};
+  // Modal claim selection state
+  modalClaims: any[] = [];
   selectedClaim: any = null;
+  showModal: boolean = false;
 
   // Edit modal properties
   showEditModal: boolean = false;
   editForm: any = {
-    title: '',
-    description: '',
-    location: '',
-    type: 'Lost'
+    Title: '',
+    Description: '',
+    Location: '',
+    Type: 'Lost'
   };
   editingItem: any = null;
 
@@ -46,7 +49,6 @@ export class MyItems implements OnInit {
   ngOnInit(): void {
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
-    console.log('User data from localStorage:', user);
 
     if (!user || !user.userId) {
       console.error('No user found or invalid user data');
@@ -59,9 +61,6 @@ export class MyItems implements OnInit {
     }
 
     this.currentUserId = user.userId;
-    console.log('Current user ID:', this.currentUserId);
-
-    console.log('Loading my reported items and claimed items...');
 
     if (this.currentUserId) {
       this.loadReportedItems(this.currentUserId);
@@ -75,15 +74,12 @@ export class MyItems implements OnInit {
 
     this.itemService.getUserItems(userId).subscribe({
       next: (data) => {
-        console.log('My reported items loaded:', data);
         this.items = data;
         this.loading = false;
         this.cdr.detectChanges();
-        console.log('Final my reported items:', this.items);
-        console.log('Reported items loading state:', this.loading);
       },
       error: (err) => {
-        console.error('Error loading my reported items:', err);
+        console.error('Error loading your reported items:', err);
         this.errorMessage = 'Failed to load your reported items. Please try again.';
         this.loading = false;
         this.cdr.detectChanges();
@@ -95,17 +91,9 @@ export class MyItems implements OnInit {
   private loadClaimedItems(userId: number) {
 
     this.claimService.getClaimedItems(userId).subscribe({
-      next: (data) => {
-        console.log('My claims loaded:', data);
-        console.log('Claims data structure:', data);
+      next: (data: any[]) => {
         
-        // Show all claims for debugging
-        if (data && data.length > 0) {
-          console.log('First claim structure:', data[0]);
-          console.log('All claim statuses:', data.map((c: any) => ({ id: c.id, status: c.status })));
-        }
-        
-        // Show ALL claims to debug the issue
+        // Process claims data
         this.claimedItems = (data || [])
           .map((claim: any) => ({
             ...claim.item,
@@ -119,12 +107,9 @@ export class MyItems implements OnInit {
 
         this.claimedLoading = false;
         this.cdr.detectChanges();
-
-        console.log('Final claimed items (approved and denied claims only):', this.claimedItems);
-        console.log('Claimed items loading state:', this.claimedLoading);
       },
       error: (err) => {
-        console.error('Error loading claimed items:', err);
+        console.error('Error loading your claimed items:', err);
         this.claimedErrorMessage = 'Failed to load your claimed items. Please try again.';
         this.claimedLoading = false;
         this.cdr.detectChanges();
@@ -142,7 +127,7 @@ export class MyItems implements OnInit {
         // Load claims for each item
         items.forEach((item: any) => {
           this.claimService.getClaimsForItem(item.id).subscribe({
-            next: (claims) => {
+            next: (claims: any[]) => {
               if (claims && claims.length > 0) {
                 // Store only pending claims for notification cards
                 this.itemClaims[item.id] = claims
@@ -175,10 +160,10 @@ export class MyItems implements OnInit {
   openEditModal(item: any) {
     this.editingItem = item;
     this.editForm = {
-      title: item.title,
-      description: item.description,
-      location: item.location,
-      type: item.type
+      Title: item.title,
+      Description: item.description,
+      Location: item.location,
+      Type: item.type
     };
     this.showEditModal = true;
   }
@@ -187,10 +172,10 @@ export class MyItems implements OnInit {
     this.showEditModal = false;
     this.editingItem = null;
     this.editForm = {
-      title: '',
-      description: '',
-      location: '',
-      type: 'Lost'
+      Title: '',
+      Description: '',
+      Location: '',
+      Type: 'Lost'
     };
   }
 
@@ -199,7 +184,7 @@ export class MyItems implements OnInit {
 
     const updatedItem = {
       ...this.editForm,
-      id: this.editingItem.id
+      UserId: this.currentUserId
     };
 
     this.itemService.updateItem(this.editingItem.id, updatedItem).subscribe({
@@ -212,11 +197,20 @@ export class MyItems implements OnInit {
       error: (err: any) => {
         console.error('Error updating item:', err);
         if (err.status === 405 || err.status === 404) {
-          // Update functionality is not yet available on the server
+          // Update functionality is not yet available on server
           this.closeEditModal();
         } else {
           // Failed to update item
           this.closeEditModal();
+          // Show validation error message if available
+          if (err.error && err.error.errors) {
+            const validationErrors = Object.values(err.error.errors).flat();
+            if (validationErrors.length > 0) {
+              alert(`Validation failed: ${validationErrors.join(', ')}`);
+            }
+          } else {
+            alert('Failed to update item. Please try again.');
+          }
         }
       }
     });
@@ -249,17 +243,23 @@ export class MyItems implements OnInit {
   }
 
   openClaimModalForItem(itemId: number) {
-    // Find the first pending claim for this item
+    // Open modal with all pending claims for this item
     const claims = this.itemClaims[itemId] || [];
-    const claim = claims.find((c: any) => c.status === 'Pending');
-    if (claim) {
-      this.openClaimModal(claim);
+    if (claims.length > 0) {
+      this.modalClaims = claims;
+      this.selectedClaim = claims[0];
+      this.showModal = true;
     }
+  }
+
+  selectClaim(claim: any) {
+    this.selectedClaim = claim;
   }
 
   closeModal() {
     this.showModal = false;
     this.selectedClaim = null;
+    this.modalClaims = [];
   }
 
   approveClaim() {

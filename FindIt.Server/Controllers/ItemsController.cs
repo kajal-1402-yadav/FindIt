@@ -75,6 +75,11 @@ namespace FindIt.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateItem([FromBody] ItemCreateDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             Console.WriteLine("=== CreateItem called ===");
             Console.WriteLine($"Title: {dto.Title}");
             Console.WriteLine($"Description: {dto.Description}");
@@ -90,8 +95,7 @@ namespace FindIt.Server.Controllers
                 Type = dto.Type,
                 UserId = dto.UserId,
                 Date = DateTime.UtcNow.AddHours(5.5),
-                Status = "Open",
-                ImageUrl = null
+                Status = "Open"
             };
 
             _context.Items.Add(item);
@@ -106,7 +110,6 @@ namespace FindIt.Server.Controllers
                 Date = item.Date,
                 Type = item.Type,
                 Status = item.Status,
-                ImageUrl = item.ImageUrl,
                 UserId = item.UserId
             };
 
@@ -118,6 +121,11 @@ namespace FindIt.Server.Controllers
         [HttpPost("{id}/update")]
         public async Task<IActionResult> UpdateItem(int id, [FromBody] ItemCreateDto dto)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             Console.WriteLine("=== UpdateItem called ===");
             Console.WriteLine($"Item ID: {id}");
             Console.WriteLine($"Title: {dto.Title}");
@@ -150,7 +158,6 @@ namespace FindIt.Server.Controllers
                     Date = item.Date,
                     Type = item.Type,
                     Status = item.Status,
-                    ImageUrl = item.ImageUrl,
                     UserId = item.UserId
                 };
 

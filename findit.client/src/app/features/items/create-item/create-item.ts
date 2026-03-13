@@ -24,7 +24,6 @@ export class CreateItem {
   ) { }
 
   createItem() {
-    console.log('createItem called');
     this.formSubmitted = true;
 
     const user = JSON.parse(localStorage.getItem('user') || '{}');
@@ -36,7 +35,6 @@ export class CreateItem {
     }
 
     if (!this.title.trim() || !this.description.trim() || !this.location.trim()) {
-      console.log('Validation failed:', { title: this.title, description: this.description, location: this.location });
       return; // Error messages will show in template
     }
 
@@ -49,10 +47,8 @@ export class CreateItem {
       UserId: user.userId
     };
 
-    console.log('Creating item:', itemData);
     this.itemService.createItem(itemData).subscribe({
       next: () => {
-        console.log('Success callback reached');
         // Show success message
         this.showSuccessMessage = true;
         this.formSubmitted = false; // Reset validation state
@@ -62,8 +58,6 @@ export class CreateItem {
         this.description = '';
         this.location = '';
         this.type = 'Lost';
-        
-        console.log('Success message set to:', this.showSuccessMessage);
         
         // Force UI update
         this.cdr.detectChanges();
@@ -75,8 +69,8 @@ export class CreateItem {
         }, 3000);
       },
       error: (err) => {
-        console.error(err);
-        alert("Failed to create item");
+        console.error('Error creating item:', err);
+        alert('Failed to create item. Please try again.');
       }
     });
 

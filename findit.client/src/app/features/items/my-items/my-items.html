@@ -46,7 +46,7 @@
 
           <p class="item-field" *ngIf="item.date">
             <span class="field-label">Date:</span> 
-            <span class="field-value">{{ item.date | date:'MMM d, y, h:mm:ss a' }} UTC</span>
+            <span class="field-value">{{ item.date | date:'MMM d, y, h:mm:ss a' }}</span>
           </p>
 
           <p class="item-field">
@@ -62,17 +62,13 @@
         </div>
 
         <!-- CLAIM NOTIFICATION -->
-        <div *ngIf="itemClaims[item.id] as claims && item.status !== 'Returned' && item.status !== 'report denied'" class="claim-notification">
-          <span class="notification-text">🔔 New Claim Request</span>
-          <div class="claim-details" *ngFor="let claim of claims">
-            <p><strong>Claimant:</strong> {{ claim.user?.name || 'Unknown' }}</p>
-            <p><strong>Message:</strong> {{ claim.message }}</p>
-            <p><strong>Status:</strong> <span class="claim-badge" [ngClass]="claim.status?.toLowerCase()">{{ claim.status }}</span></p>
-          </div>
-          <button class="review-claims-btn" (click)="openClaimModalForItem(item.id)">
-            Review Claims
+        <ng-container *ngIf="itemClaims[item.id] as claims">
+          <button *ngIf="claims.length > 0 && item.status !== 'Returned' && item.status !== 'report denied'"
+                  class="new-claim-btn"
+                  (click)="openClaimModalForItem(item.id)">
+            View Claims ({{ claims.length }})
           </button>
-        </div>
+        </ng-container>
 
         <!-- ITEM ACTIONS -->
         <div class="item-actions">
@@ -139,7 +135,7 @@
 
           <p class="item-field" *ngIf="claimedItem.date">
             <span class="field-label">Date:</span> 
-            <span class="field-value">{{ claimedItem.date | date:'MMM d, y, h:mm:ss a' }} UTC</span>
+            <span class="field-value">{{ claimedItem.date | date:'MMM d, y, h:mm:ss a' }}</span>
           </p>
 
           <p class="item-field">
@@ -183,30 +179,30 @@
         <form (ngSubmit)="updateItem()">
           <div class="form-group">
             <label>Title</label>
-            <input type="text" [(ngModel)]="editForm.title" name="title" required>
+            <input type="text" [(ngModel)]="editForm.Title" name="Title" required>
           </div>
 
           <div class="form-group">
             <label>Description</label>
-            <textarea [(ngModel)]="editForm.description" name="description" required></textarea>
+            <textarea [(ngModel)]="editForm.Description" name="Description" required></textarea>
           </div>
 
           <div class="form-group">
             <label>Location</label>
-            <input type="text" [(ngModel)]="editForm.location" name="location" required>
+            <input type="text" [(ngModel)]="editForm.Location" name="Location" required>
           </div>
 
           <div class="form-group">
             <label>Type</label>
             <div class="type-toggle">
               <button type="button"
-                      [class.active]="editForm.type==='Lost'"
-                      (click)="editForm.type='Lost'">
+                      [class.active]="editForm.Type==='Lost'"
+                      (click)="editForm.Type='Lost'">
                 Lost Item
               </button>
               <button type="button"
-                      [class.active]="editForm.type==='Found'"
-                      (click)="editForm.type='Found'">
+                      [class.active]="editForm.Type==='Found'"
+                      (click)="editForm.Type='Found'">
                 Found Item
               </button>
             </div>
@@ -240,6 +236,19 @@
       </div>
 
       <div class="modal-body" *ngIf="selectedClaim">
+        <div *ngIf="modalClaims.length > 1" class="claim-selector">
+          <label>Select claim:</label>
+          <div class="claim-options">
+            <button
+              *ngFor="let claim of modalClaims"
+              type="button"
+              [class.selected]="claim === selectedClaim"
+              (click)="selectClaim(claim)">
+              {{ claim.user?.name || 'Unknown' }}
+            </button>
+          </div>
+        </div>
+
         <div class="claim-info">
           <div class="info-item">
             <span class="info-label">Item:</span>
