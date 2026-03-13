@@ -82,15 +82,31 @@ export class ClaimItem implements OnInit {
         this.successMessage = 'Claim submitted successfully!';
         this.cdr.detectChanges();
 
-        setTimeout(() => {
-          this.router.navigate(['/dashboard']);
-        }, 4000);
-
       },
 
       error: (err) => {
-        console.error(err);
-        this.errorMessage = 'Failed to submit claim. Please try again.';
+        // Check if this is a duplicate claim error (multiple ways to check)
+        const errorMessage = err.error?.message || err.error || err.message || '';
+        
+        if (errorMessage.includes("already requested a claim") || 
+            errorMessage.includes("already requested") ||
+            err.status === 400) {
+          // This is expected behavior for duplicate claims, not really an error
+          console.log('Duplicate claim prevented - user already has a pending claim');
+          this.successMessage = 'You have already submitted a claim for this item. Please wait for the owner to review it.';
+          this.errorMessage = ''; // Clear any error message
+          
+          // Clear the form
+          this.message = '';
+          this.formSubmitted = false;
+        } else {
+          // This is a real error
+          console.error('Claim submission error:', err);
+          this.errorMessage = 'Failed to submit claim. Please try again.';
+          this.successMessage = ''; // Clear success message
+        }
+        
+        this.cdr.detectChanges();
       }
 
     });

@@ -267,7 +267,6 @@ export class MyItems implements OnInit {
 
     this.claimService.approveClaim(this.selectedClaim.id).subscribe({
       next: () => {
-        alert('Claim approved successfully!');
         this.closeModal();
         // Refresh both reported items and claims to remove approved claim from card
         const user = JSON.parse(localStorage.getItem('user') || '{}');

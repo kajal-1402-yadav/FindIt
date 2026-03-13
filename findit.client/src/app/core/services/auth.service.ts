@@ -18,6 +18,10 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, data);
   }
 
+  deleteAccount(data: any) {
+    return this.http.post(`${this.apiUrl}/delete-account`, data);
+  }
+
   isLoggedIn(): boolean {
     const user = localStorage.getItem('user');
     return !!user && user !== '{}';

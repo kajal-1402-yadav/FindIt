@@ -34,6 +34,15 @@ namespace FindIt.Server.Controllers
             if (item.Status == "Returned")
                 return BadRequest("Item has already been returned");
 
+            // 🚫 Prevent duplicate claims - check if user already has a pending claim for this item
+            var existingPendingClaim = await _context.Claims
+                .FirstOrDefaultAsync(c => c.ItemId == claim.ItemId && 
+                                       c.UserId == claim.UserId && 
+                                       c.Status == "Pending");
+
+            if (existingPendingClaim != null)
+                return BadRequest("You have already requested a claim for this item.");
+
             claim.Status = "Pending";
             claim.CreatedAt = DateTime.UtcNow;
 

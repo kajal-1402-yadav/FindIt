@@ -144,6 +144,25 @@
 
 /* CLAIM NOTIFICATIONS */
 
+.new-claim-btn {
+  background: #6BE12C;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 12px;
+}
+
+.new-claim-btn:hover {
+  background: #4ADE1A;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(107, 225, 44, 0.3);
+}
+
 .claim-notification {
   margin-top: 15px;
   padding: 12px;
